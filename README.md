@@ -1,12 +1,22 @@
 ```html
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
 <title>Coin Rush</title>
 
 <style>
+
+/* =========================
+   GENERAL
+========================= */
+
 * {
     box-sizing: border-box;
 }
@@ -32,6 +42,11 @@ body {
     margin: 12px 0;
 }
 
+
+/* =========================
+   STATS
+========================= */
+
 .stats {
     display: flex;
     gap: 10px;
@@ -46,25 +61,38 @@ body {
     font-weight: bold;
 }
 
+
+/* =========================
+   ANIMAL
+========================= */
+
 .animalArea {
     height: 280px;
     background: linear-gradient(#8bdcff, #e7fbff);
     border-radius: 18px;
     position: relative;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     overflow: hidden;
 }
 
 .animal {
     width: 180px;
     height: 180px;
+
     object-fit: contain;
+
     user-select: none;
     pointer-events: none;
-    transition: 0.4s;
+
+    transition: transform 0.25s ease;
 }
+
+
+/* Taille selon l'âge */
 
 .bebe {
     transform: scale(0.75);
@@ -82,49 +110,63 @@ body {
     transform: scale(1.05);
 }
 
-/* Animation quand l'animal mange */
+
+/* =========================
+   ANIMATION MANGER
+========================= */
+
 .animal.eating {
     animation: eating 0.55s ease;
 }
 
 @keyframes eating {
+
     0% {
-        transform: scale(1) rotate(0deg);
+        transform: scale(1);
     }
 
-    25% {
-        transform: scale(1.12) rotate(-4deg);
+    20% {
+        transform: scale(1.12) rotate(-5deg);
     }
 
-    50% {
-        transform: scale(0.92) rotate(4deg);
+    40% {
+        transform: scale(0.92) rotate(5deg);
     }
 
-    75% {
-        transform: scale(1.08) rotate(-2deg);
+    60% {
+        transform: scale(1.10) rotate(-3deg);
+    }
+
+    80% {
+        transform: scale(1.04) rotate(2deg);
     }
 
     100% {
-        transform: scale(1) rotate(0deg);
+        transform: scale(1);
     }
 }
 
-/* Animation quand il est heureux */
+
+/* =========================
+   ANIMATION HEUREUX
+========================= */
+
 .animal.happy {
     animation: happy 0.8s ease;
 }
 
 @keyframes happy {
+
     0% {
         transform: scale(1);
     }
 
     30% {
-        transform: scale(1.15) translateY(-8px);
+        transform: scale(1.15) translateY(-10px);
     }
 
     60% {
-        transform: scale(1.05) translateY(0);
+        transform: scale(1.08);
     }
 
     100% {
@@ -132,49 +174,37 @@ body {
     }
 }
 
-/* Coeur uniquement quand on monte de niveau */
-.heart {
-    position: absolute;
-    font-size: 35px;
-    pointer-events: none;
-    animation: heart 1s forwards;
-}
 
-@keyframes heart {
-    0% {
-        opacity: 1;
-        transform: translateY(10px) scale(0.6);
-    }
+/* =========================
+   COOKIE
+========================= */
 
-    50% {
-        opacity: 1;
-        transform: translateY(-40px) scale(1.2);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateY(-90px) scale(1);
-    }
-}
-
-/* COOKIE */
 .cookie {
     position: absolute;
+
     font-size: 45px;
+
     cursor: pointer;
+
     z-index: 5;
 
     opacity: 1;
+
     transform: scale(1) rotate(0deg);
 
     transition:
-        opacity 0.35s ease,
+        opacity 0.4s ease,
         transform 0.45s cubic-bezier(.2,.8,.2,1);
 }
 
 .cookie.disappearing {
+
     opacity: 0;
-    transform: scale(0.2) rotate(35deg);
+
+    transform:
+        scale(0.15)
+        rotate(50deg);
+
     pointer-events: none;
 }
 
@@ -182,104 +212,238 @@ body {
     display: none;
 }
 
-/* +1 / +2 */
+
+/* =========================
+   +1 +2 +3
+========================= */
+
 .plusOne {
+
     position: absolute;
+
     font-size: 32px;
+
     font-weight: bold;
+
     color: #20c95c;
-    text-shadow: 0 2px 4px #0005;
+
+    text-shadow:
+        0 2px 4px #0008;
+
     pointer-events: none;
+
     z-index: 20;
 
-    animation: plusAnimation 0.85s ease-out forwards;
+    animation:
+        plusAnimation
+        0.85s
+        ease-out
+        forwards;
 }
 
 @keyframes plusAnimation {
+
     0% {
         opacity: 0;
-        transform: translate(-50%, 20px) scale(0.6);
+
+        transform:
+            translate(-50%,20px)
+            scale(0.6);
     }
 
     20% {
         opacity: 1;
-        transform: translate(-50%, 0) scale(1.2);
+
+        transform:
+            translate(-50%,0)
+            scale(1.2);
     }
 
     100% {
         opacity: 0;
-        transform: translate(-50%, -75px) scale(1);
+
+        transform:
+            translate(-50%,-75px)
+            scale(1);
     }
 }
 
+
+/* =========================
+   COEUR
+========================= */
+
+.heart {
+
+    position: absolute;
+
+    font-size: 35px;
+
+    pointer-events: none;
+
+    animation:
+        heartAnimation
+        1s
+        forwards;
+}
+
+@keyframes heartAnimation {
+
+    0% {
+        opacity: 1;
+
+        transform:
+            translateY(10px)
+            scale(0.6);
+    }
+
+    50% {
+        opacity: 1;
+
+        transform:
+            translateY(-40px)
+            scale(1.2);
+    }
+
+    100% {
+        opacity: 0;
+
+        transform:
+            translateY(-90px)
+            scale(1);
+    }
+}
+
+
+/* =========================
+   PROGRESSION
+========================= */
+
 .progress {
+
     height: 15px;
+
     background: #111;
+
     border-radius: 10px;
+
     overflow: hidden;
+
     margin: 10px 0;
 }
 
 .progressBar {
+
     height: 100%;
+
     width: 0%;
+
     background: #ffd43b;
-    transition: 0.3s;
+
+    transition:
+        width 0.3s ease;
 }
 
+
+/* =========================
+   BOUTONS
+========================= */
+
 button {
+
     width: 100%;
+
     border: none;
+
     border-radius: 14px;
+
     padding: 14px;
+
     margin: 5px 0;
+
     font-size: 16px;
+
     font-weight: bold;
+
     cursor: pointer;
+
     background: #454563;
+
     color: white;
 }
 
+button:disabled {
+
+    opacity: 0.5;
+
+    cursor: not-allowed;
+}
+
 .mainButton {
+
     background: #ffd43b;
+
     color: #171717;
+
     font-size: 20px;
 }
 
+
+/* =========================
+   AUTRES
+========================= */
+
 .item {
+
     background: #191929;
+
     padding: 12px;
+
     border-radius: 15px;
+
     margin: 8px 0;
 }
 
 .status {
+
     min-height: 25px;
+
     font-weight: bold;
 }
 
 .small {
+
     font-size: 13px;
+
     opacity: 0.8;
 }
 
 .locked {
+
     opacity: 0.55;
 }
 
 .hidden {
+
     display: none !important;
 }
 
-/* Effets */
+
+/* =========================
+   EFFETS
+========================= */
 
 .gold {
     animation: gold 0.45s;
 }
 
 @keyframes gold {
+
     50% {
-        box-shadow: 0 0 30px gold, 0 0 60px gold;
+
+        box-shadow:
+            0 0 30px gold,
+            0 0 60px gold;
     }
 }
 
@@ -288,8 +452,12 @@ button {
 }
 
 @keyframes diamond {
+
     50% {
-        box-shadow: 0 0 30px cyan, 0 0 60px white;
+
+        box-shadow:
+            0 0 30px cyan,
+            0 0 60px white;
     }
 }
 
@@ -298,11 +466,26 @@ button {
 }
 
 @keyframes rainbow {
-    0% { box-shadow: 0 0 20px red; }
-    25% { box-shadow: 0 0 30px orange; }
-    50% { box-shadow: 0 0 35px lime; }
-    75% { box-shadow: 0 0 35px cyan; }
-    100% { box-shadow: 0 0 20px violet; }
+
+    0% {
+        box-shadow: 0 0 20px red;
+    }
+
+    25% {
+        box-shadow: 0 0 30px orange;
+    }
+
+    50% {
+        box-shadow: 0 0 35px lime;
+    }
+
+    75% {
+        box-shadow: 0 0 35px cyan;
+    }
+
+    100% {
+        box-shadow: 0 0 20px violet;
+    }
 }
 
 .galaxy {
@@ -310,8 +493,12 @@ button {
 }
 
 @keyframes galaxy {
+
     50% {
-        box-shadow: 0 0 35px violet, 0 0 70px purple;
+
+        box-shadow:
+            0 0 35px violet,
+            0 0 70px purple;
     }
 }
 
@@ -320,9 +507,18 @@ button {
 }
 
 @keyframes lightning {
-    25% { box-shadow: 0 0 35px white; }
-    50% { box-shadow: 0 0 60px cyan; }
-    75% { box-shadow: 0 0 35px white; }
+
+    25% {
+        box-shadow: 0 0 35px white;
+    }
+
+    50% {
+        box-shadow: 0 0 60px cyan;
+    }
+
+    75% {
+        box-shadow: 0 0 35px white;
+    }
 }
 
 .lava {
@@ -330,89 +526,209 @@ button {
 }
 
 @keyframes lava {
+
     50% {
-        box-shadow: 0 0 35px orange, 0 0 70px red;
+
+        box-shadow:
+            0 0 35px orange,
+            0 0 70px red;
     }
 }
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div class="game">
+
 
 <h1>🪙 Coin Rush</h1>
 
+
+<!-- =========================
+     STATS
+========================= -->
+
 <div class="card stats">
-    <div class="stat">
-        🪙 <span id="coins">0</span>
-    </div>
 
     <div class="stat">
-        <span id="fruitIcon">🍎</span>
-        <span id="fruit">0</span>
+
+        🪙
+        <span id="coins">
+            0
+        </span>
+
     </div>
+
+
+    <div class="stat">
+
+        <span id="fruitIcon">
+            🍎
+        </span>
+
+        <span id="fruit">
+            0
+        </span>
+
+    </div>
+
 </div>
+
+
+<!-- =========================
+     ANIMAL
+========================= -->
 
 <div class="card">
 
-<h2 id="worldTitle">🌍 Monde 1 — 🐹 Capybara</h2>
 
-<div class="animalArea" id="animalArea">
+<h2 id="worldTitle">
 
-<img
-    id="animal"
-    class="animal bebe"
-    src="capybara.png"
-    alt="Capybara"
+🌍 Monde 1 — 🐹 Capybara
+
+</h2>
+
+
+<div
+    class="animalArea"
+    id="animalArea"
 >
 
-<div id="cookie" class="cookie hidden">🍪</div>
+
+<img
+
+    id="animal"
+
+    class="animal bebe"
+
+    src="IMG_1419.jpeg"
+
+    alt="Capybara"
+
+>
+
+
+<div
+    id="cookie"
+    class="cookie hidden"
+>
+🍪
+</div>
+
 
 </div>
+
 
 <p>
-Niveau <b><span id="level">1</span></b>/<span id="maxLevel">50</span>
+
+Niveau
+
+<b>
+
+<span id="level">
+1
+</span>
+
+</b>
+
+/<span id="maxLevel">
+50
+</span>
+
 </p>
+
 
 <div class="progress">
-    <div id="progressBar" class="progressBar"></div>
+
+<div
+    id="progressBar"
+    class="progressBar"
+></div>
+
 </div>
+
 
 <p class="small">
-    <span id="need">40</span>
-    <span id="needIcon">🍎</span>
-    pour le prochain niveau
+
+<span id="need">
+40
+</span>
+
+<span id="needIcon">
+🍎
+</span>
+
+pour le prochain niveau
+
 </p>
 
+
 </div>
+
+
+<!-- =========================
+     BOUTON
+========================= -->
 
 <div class="card">
 
-<button id="clickButton" class="mainButton">
-    👆 CLIQUER
+
+<button
+    id="clickButton"
+    class="mainButton"
+>
+
+👆 CLIQUER
+
 </button>
 
-<div id="status" class="status"></div>
+
+<div
+    id="status"
+    class="status"
+></div>
+
 
 </div>
 
 
-<!-- MONDE 1 -->
+<!-- =========================
+     BOUTIQUE MONDE 1
+========================= -->
 
-<div id="shop1" class="card">
+<div
+    id="shop1"
+    class="card"
+>
 
-<h2>🛒 Objets — Monde 1</h2>
+
+<h2>
+🛒 Objets — Monde 1
+</h2>
+
 
 <div class="item">
 
-<b>🟡 Clic Gold</b>
+<b>
+🟡 Clic Gold
+</b>
 
-<p>50 🪙 → 2 🍎 par clic</p>
+<p>
+50 🪙 → 2 🍎 par clic
+</p>
 
-<p>Effet doré ✨</p>
+<p>
+Effet doré ✨
+</p>
 
-<button onclick="buyClick('gold',50)">
+<button
+onclick="buyClick('gold',50)"
+>
 Acheter / utiliser
 </button>
 
@@ -423,13 +739,21 @@ Acheter / utiliser
 
 <div class="item">
 
-<b>💎 Clic Diamond</b>
+<b>
+💎 Clic Diamond
+</b>
 
-<p>100 🪙 → 3 🍎 par clic</p>
+<p>
+100 🪙 → 3 🍎 par clic
+</p>
 
-<p>Effet diamant 💎</p>
+<p>
+Effet diamant 💎
+</p>
 
-<button onclick="buyClick('diamond',100)">
+<button
+onclick="buyClick('diamond',100)"
+>
 Acheter / utiliser
 </button>
 
@@ -440,11 +764,17 @@ Acheter / utiliser
 
 <div class="item">
 
-<b>🤖 Auto Clicker</b>
+<b>
+🤖 Auto Clicker
+</b>
 
-<p>500 🪙 → 2 🍎 par seconde</p>
+<p>
+500 🪙 → 2 🍎 par seconde
+</p>
 
-<button onclick="buyAuto('auto1',500)">
+<button
+onclick="buyAuto('auto1',500)"
+>
 Acheter / utiliser
 </button>
 
@@ -455,15 +785,25 @@ Acheter / utiliser
 
 <div class="item">
 
-<b>🌈 Clic Rainbow</b>
+<b>
+🌈 Clic Rainbow
+</b>
 
-<p>750 🪙 → 10 🍎 par clic</p>
+<p>
+750 🪙 → 10 🍎 par clic
+</p>
 
-<p>+5 🍎 par seconde</p>
+<p>
++5 🍎 par seconde
+</p>
 
-<p>Effet rainbow 🌈</p>
+<p>
+Effet rainbow 🌈
+</p>
 
-<button onclick="buyClick('rainbow',750)">
+<button
+onclick="buyClick('rainbow',750)"
+>
 Acheter / utiliser
 </button>
 
@@ -471,67 +811,119 @@ Acheter / utiliser
 
 </div>
 
+
 </div>
 
 
-<!-- MONDES -->
+<!-- =========================
+     MONDES
+========================= -->
 
 <div class="card">
 
-<h2>🌍 Mondes</h2>
+
+<h2>
+🌍 Mondes
+</h2>
+
 
 <div class="item">
 
-<h3>🌍 Monde 1 — 🐹</h3>
+<h3>
+🌍 Monde 1 — 🐹
+</h3>
 
-<p>Capybara — 50 niveaux</p>
+<p>
+Capybara — 50 niveaux
+</p>
 
 </div>
 
 
-<div id="world2Card" class="item locked">
+<div
+    id="world2Card"
+    class="item locked"
+>
 
-<h3>🔒 Monde 2 — 🐼</h3>
+
+<h3>
+🔒 Monde 2 — 🐼
+</h3>
+
 
 <p id="world2Text">
+
 Atteins le niveau 50 du Capybara.
+
 </p>
 
-<button id="world2Button" disabled onclick="goWorld2()">
+
+<button
+    id="world2Button"
+    disabled
+    onclick="goWorld2()"
+>
+
 🔒 Niveau 50 requis
+
 </button>
+
 
 </div>
 
 
 <div class="item locked">
 
-<h3>🔒 Monde 3 — 🦎</h3>
+<h3>
+🔒 Monde 3 — 🦎
+</h3>
 
-<p>Axolote</p>
+<p>
+Axolote
+</p>
 
-<b>Bientôt disponible</b>
+<b>
+Bientôt disponible
+</b>
 
 </div>
 
+
 </div>
 
 
-<!-- MONDE 2 -->
+<!-- =========================
+     BOUTIQUE MONDE 2
+========================= -->
 
-<div id="shop2" class="card hidden">
+<div
+    id="shop2"
+    class="card hidden"
+>
 
-<h2>🌍 Monde 2 — 🐼 Panda</h2>
+
+<h2>
+🌍 Monde 2 — 🐼 Panda
+</h2>
+
 
 <div class="item">
 
-<b>🌌 Clic Galaxie</b>
+<b>
+🌌 Clic Galaxie
+</b>
 
-<p>1 500 🎋 → 50 🎋 par clic</p>
+<p>
+1 500 🪙 → 50 🎋 par clic
+</p>
 
-<p>Effet galaxie violet 🟣</p>
+<p>
+Effet galaxie violet 🟣
+</p>
 
-<button onclick="buyClick('galaxy',1500)">
+<button
+onclick="buyClick('galaxy',1500)"
+>
 Acheter / utiliser
 </button>
 
@@ -542,13 +934,21 @@ Acheter / utiliser
 
 <div class="item">
 
-<b>⚡ Clic Foudre</b>
+<b>
+⚡ Clic Foudre
+</b>
 
-<p>6 000 🎋 → 100 🎋 par clic</p>
+<p>
+6 000 🪙 → 100 🎋 par clic
+</p>
 
-<p>Effet éclair ⚡</p>
+<p>
+Effet éclair ⚡
+</p>
 
-<button onclick="buyClick('lightning',6000)">
+<button
+onclick="buyClick('lightning',6000)"
+>
 Acheter / utiliser
 </button>
 
@@ -559,13 +959,21 @@ Acheter / utiliser
 
 <div class="item">
 
-<b>🌋 Clic Volcan</b>
+<b>
+🌋 Clic Volcan
+</b>
 
-<p>50 000 🎋 → 180 🎋 par clic</p>
+<p>
+50 000 🪙 → 180 🎋 par clic
+</p>
 
-<p>Effet lave 🔥</p>
+<p>
+Effet lave 🔥
+</p>
 
-<button onclick="buyClick('volcano',50000)">
+<button
+onclick="buyClick('volcano',50000)"
+>
 Acheter / utiliser
 </button>
 
@@ -576,11 +984,17 @@ Acheter / utiliser
 
 <div class="item">
 
-<b>🤖 Auto Clicker</b>
+<b>
+🤖 Auto Clicker
+</b>
 
-<p>100 000 🎋 → 300 🎋 par seconde</p>
+<p>
+100 000 🪙 → 300 🎋 par seconde
+</p>
 
-<button onclick="buyAuto('auto2',100000)">
+<button
+onclick="buyAuto('auto2',100000)"
+>
 Acheter / utiliser
 </button>
 
@@ -588,40 +1002,77 @@ Acheter / utiliser
 
 </div>
 
+
 </div>
+
 
 </div>
 
 
 <script>
 
-/* =========================
-   SAUVEGARDE
-========================= */
 
-let saveData = JSON.parse(
-    localStorage.getItem("coinRush")
-);
+/* =====================================================
+   SAUVEGARDE
+===================================================== */
+
+let saveData =
+    JSON.parse(
+        localStorage.getItem(
+            "coinRush"
+        )
+    );
+
 
 if (!saveData) {
 
     saveData = {
+
         coins: 0,
+
         world: 1,
+
         fruit: 0,
+
         level: 1,
+
         progress: 0,
+
         clickType: "normal",
+
         owned: {},
+
         upgrades: {}
+
     };
 
 }
 
 
-/* =========================
-   PRIX ET PUISSANCES
-========================= */
+/* Sécurité */
+
+if (!saveData.owned)
+    saveData.owned = {};
+
+if (!saveData.upgrades)
+    saveData.upgrades = {};
+
+if (saveData.coins === undefined)
+    saveData.coins = 0;
+
+if (saveData.fruit === undefined)
+    saveData.fruit = 0;
+
+if (saveData.progress === undefined)
+    saveData.progress = 0;
+
+if (saveData.level === undefined)
+    saveData.level = 1;
+
+
+/* =====================================================
+   OBJETS
+===================================================== */
 
 const items = {
 
@@ -658,27 +1109,34 @@ const items = {
 };
 
 
-/* =========================
+/* =====================================================
    SAUVEGARDER
-========================= */
+===================================================== */
 
 function save() {
 
     localStorage.setItem(
         "coinRush",
-        JSON.stringify(saveData)
+        JSON.stringify(
+            saveData
+        )
     );
 
 }
 
 
-/* =========================
-   BESOIN POUR LE NIVEAU
-========================= */
+/* =====================================================
+   BESOIN POUR NIVEAU
+===================================================== */
 
-function needForLevel(level, world) {
+function needForLevel(
+    level,
+    world
+) {
+
 
     if (world === 1) {
+
 
         const values = {
 
@@ -699,186 +1157,348 @@ function needForLevel(level, world) {
 
         };
 
+
         if (values[level]) {
+
             return values[level];
+
         }
 
+
         return Math.floor(
-            1000 * Math.pow(1.18, level - 15)
+            1000 *
+            Math.pow(
+                1.18,
+                level - 15
+            )
         );
 
     }
 
+
     return Math.floor(
-        200 * Math.pow(1.075, level - 1)
+        200 *
+        Math.pow(
+            1.075,
+            level - 1
+        )
     );
 
 }
 
 
-/* =========================
-   PUISSANCE DU CLIC
-========================= */
+/* =====================================================
+   PUISSANCE
+===================================================== */
 
 function getClickPower() {
 
-    if (saveData.world === 1) {
 
-        if (saveData.clickType === "gold")
-            return upgradedPower("gold");
+    if (
+        saveData.world === 1
+    ) {
 
-        if (saveData.clickType === "diamond")
-            return upgradedPower("diamond");
 
-        if (saveData.clickType === "rainbow")
-            return upgradedPower("rainbow");
+        if (
+            saveData.clickType ===
+            "gold"
+        )
+            return upgradedPower(
+                "gold"
+            );
+
+
+        if (
+            saveData.clickType ===
+            "diamond"
+        )
+            return upgradedPower(
+                "diamond"
+            );
+
+
+        if (
+            saveData.clickType ===
+            "rainbow"
+        )
+            return upgradedPower(
+                "rainbow"
+            );
+
 
         return 1;
+
     }
 
-    if (saveData.clickType === "galaxy")
-        return upgradedPower("galaxy");
 
-    if (saveData.clickType === "lightning")
-        return upgradedPower("lightning");
+    if (
+        saveData.clickType ===
+        "galaxy"
+    )
+        return upgradedPower(
+            "galaxy"
+        );
 
-    if (saveData.clickType === "volcano")
-        return upgradedPower("volcano");
+
+    if (
+        saveData.clickType ===
+        "lightning"
+    )
+        return upgradedPower(
+            "lightning"
+        );
+
+
+    if (
+        saveData.clickType ===
+        "volcano"
+    )
+        return upgradedPower(
+            "volcano"
+        );
+
 
     return 5;
+
 }
 
 
-/* =========================
-   AMÉLIORATIONS
-========================= */
+/* =====================================================
+   PUISSANCE AMÉLIORÉE
+===================================================== */
 
-function upgradedPower(name) {
+function upgradedPower(
+    name
+) {
 
-    const base = items[name].power;
+
+    const base =
+        items[name].power;
+
 
     const upgrade =
-        saveData.upgrades[name] || 0;
+        saveData.upgrades[name] ||
+        0;
 
-    if (upgrade === 1)
-        return Math.floor(base * 1.5);
 
-    if (upgrade === 2)
+    if (
+        upgrade === 1
+    )
+        return Math.floor(
+            base * 1.5
+        );
+
+
+    if (
+        upgrade === 2
+    )
         return base * 3;
 
-    if (upgrade === 3)
+
+    if (
+        upgrade === 3
+    )
         return base * 5;
 
+
     return base;
+
 }
 
 
-/* =========================
-   AFFICHER +1 / +2
-========================= */
+/* =====================================================
+   AFFICHER +X
+===================================================== */
 
-function showPlus(amount) {
+function showPlus(
+    amount
+) {
+
 
     const plus =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
-    plus.className = "plusOne";
 
-    plus.textContent = "+" + amount;
+    plus.className =
+        "plusOne";
+
+
+    plus.textContent =
+        "+" + amount;
+
 
     const area =
-        document.getElementById("animalArea");
+        document.getElementById(
+            "animalArea"
+        );
 
-    const x =
-        area.clientWidth / 2;
 
-    const y =
-        area.clientHeight / 2;
+    plus.style.left =
+        (
+            area.clientWidth / 2
+        ) + "px";
 
-    plus.style.left = x + "px";
-    plus.style.top = y + "px";
 
-    area.appendChild(plus);
+    plus.style.top =
+        (
+            area.clientHeight / 2
+        ) + "px";
 
-    setTimeout(function() {
-        plus.remove();
-    }, 850);
+
+    area.appendChild(
+        plus
+    );
+
+
+    setTimeout(
+        function() {
+
+            plus.remove();
+
+        },
+        850
+    );
+
 }
 
 
-/* =========================
+/* =====================================================
    ANIMATION ANIMAL
-========================= */
+===================================================== */
 
 function animateAnimal() {
 
-    const animal =
-        document.getElementById("animal");
 
-    animal.classList.remove("eating");
-    animal.classList.remove("happy");
+    const animal =
+        document.getElementById(
+            "animal"
+        );
+
+
+    animal.classList.remove(
+        "eating"
+    );
+
+
+    animal.classList.remove(
+        "happy"
+    );
+
 
     void animal.offsetWidth;
 
-    animal.classList.add("eating");
 
-    setTimeout(function() {
+    animal.classList.add(
+        "eating"
+    );
 
-        animal.classList.remove("eating");
-        animal.classList.add("happy");
 
-    }, 500);
+    setTimeout(
+        function() {
+
+
+            animal.classList.remove(
+                "eating"
+            );
+
+
+            void animal.offsetWidth;
+
+
+            animal.classList.add(
+                "happy"
+            );
+
+
+        },
+        500
+    );
 
 }
 
 
-/* =========================
+/* =====================================================
    CLIC PRINCIPAL
-========================= */
+===================================================== */
 
 document.getElementById(
     "clickButton"
 ).onclick = function() {
 
+
     const amount =
         getClickPower();
 
-    addFruit(amount);
 
-    /* Affiche +1, +2, +3, etc. */
-    showPlus(amount);
+    addFruit(
+        amount
+    );
 
-    /* Animation du capybara / panda */
+
+    showPlus(
+        amount
+    );
+
+
     animateAnimal();
 
+
     playEffect();
+
 
     document.getElementById(
         "status"
     ).textContent =
-        "😋 Miam ! +" + amount;
+        "😋 Miam ! +" +
+        amount;
+
 
     save();
 
+
     update();
+
 };
 
 
-/* =========================
-   AJOUTER DES FRUITS
-========================= */
+/* =====================================================
+   AJOUTER FRUITS
+===================================================== */
 
-function addFruit(amount) {
+function addFruit(
+    amount
+) {
 
-    saveData.progress += amount;
+
+    saveData.fruit +=
+        amount;
+
+
+    saveData.progress +=
+        amount;
+
 
     while (true) {
 
-        const max =
-            saveData.world === 1 ? 50 : 100;
 
-        if (saveData.level >= max)
+        const max =
+            saveData.world === 1
+            ? 50
+            : 100;
+
+
+        if (
+            saveData.level >= max
+        ) {
+
+            saveData.progress = 0;
+
             break;
+
+        }
+
 
         const needed =
             needForLevel(
@@ -886,283 +1506,480 @@ function addFruit(amount) {
                 saveData.world
             );
 
-        if (saveData.progress < needed)
+
+        if (
+            saveData.progress <
+            needed
+        )
             break;
 
-        saveData.progress -= needed;
+
+        saveData.progress -=
+            needed;
+
 
         saveData.level++;
 
-        /* ❤️ UN SEUL CŒUR PAR NIVEAU */
+
+        /* UN SEUL COEUR */
+
         createHeart();
+
 
         document.getElementById(
             "status"
         ).textContent =
             "🎉 Niveau " +
             saveData.level +
-            " ! +1 ❤️";
+            " ! ❤️";
+
     }
+
 }
 
 
-/* =========================
-   CRÉER LE CŒUR
-========================= */
+/* =====================================================
+   COEUR
+===================================================== */
 
 function createHeart() {
 
+
     const heart =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
 
-    heart.className = "heart";
 
-    heart.textContent = "❤️";
+    heart.className =
+        "heart";
+
+
+    heart.textContent =
+        "❤️";
+
 
     const area =
         document.getElementById(
             "animalArea"
         );
 
+
     heart.style.left =
-        (30 + Math.random() * 40) + "%";
+        (
+            30 +
+            Math.random() * 40
+        ) + "%";
+
 
     heart.style.top =
-        (45 + Math.random() * 20) + "%";
+        (
+            45 +
+            Math.random() * 20
+        ) + "%";
 
-    area.appendChild(heart);
 
-    setTimeout(function() {
-        heart.remove();
-    }, 1000);
+    area.appendChild(
+        heart
+    );
+
+
+    setTimeout(
+        function() {
+
+            heart.remove();
+
+        },
+        1000
+    );
+
 }
 
 
-/* =========================
-   EFFETS DES CLICS
-========================= */
+/* =====================================================
+   EFFETS
+===================================================== */
 
 function playEffect() {
+
 
     const button =
         document.getElementById(
             "clickButton"
         );
 
+
     button.className =
         "mainButton";
 
+
     void button.offsetWidth;
 
-    if (saveData.clickType === "gold")
-        button.classList.add("gold");
 
-    if (saveData.clickType === "diamond")
-        button.classList.add("diamond");
+    const type =
+        saveData.clickType;
 
-    if (saveData.clickType === "rainbow")
-        button.classList.add("rainbow");
 
-    if (saveData.clickType === "galaxy")
-        button.classList.add("galaxy");
+    if (type === "gold")
+        button.classList.add(
+            "gold"
+        );
 
-    if (saveData.clickType === "lightning")
-        button.classList.add("lightning");
 
-    if (saveData.clickType === "volcano")
-        button.classList.add("lava");
+    if (type === "diamond")
+        button.classList.add(
+            "diamond"
+        );
+
+
+    if (type === "rainbow")
+        button.classList.add(
+            "rainbow"
+        );
+
+
+    if (type === "galaxy")
+        button.classList.add(
+            "galaxy"
+        );
+
+
+    if (type === "lightning")
+        button.classList.add(
+            "lightning"
+        );
+
+
+    if (type === "volcano")
+        button.classList.add(
+            "lava"
+        );
+
 }
 
 
-/* =========================
-   ACHETER / UTILISER CLIC
-========================= */
+/* =====================================================
+   ACHETER CLIC
+===================================================== */
 
-function buyClick(name, price) {
+function buyClick(
+    name,
+    price
+) {
 
-    if (saveData.owned[name]) {
 
-        saveData.clickType = name;
+    if (
+        saveData.owned[name]
+    ) {
+
+
+        saveData.clickType =
+            name;
+
 
         document.getElementById(
             "status"
         ).textContent =
-            "✅ " + name + " sélectionné";
+            "✅ " +
+            name +
+            " sélectionné";
+
 
         save();
+
         update();
 
         return;
+
     }
 
-    if (saveData.fruit < price) {
+
+    if (
+        saveData.coins <
+        price
+    ) {
+
 
         document.getElementById(
             "status"
         ).textContent =
-            "❌ Pas assez de fruits";
+            "❌ Pas assez de 🪙 coins";
+
 
         return;
+
     }
 
-    saveData.fruit -= price;
 
-    saveData.owned[name] = true;
+    saveData.coins -=
+        price;
 
-    saveData.clickType = name;
+
+    saveData.owned[name] =
+        true;
+
+
+    saveData.clickType =
+        name;
+
 
     document.getElementById(
         "status"
     ).textContent =
         "🎉 Objet acheté !";
 
+
     save();
+
     update();
+
 }
 
 
-/* =========================
+/* =====================================================
    AUTO CLICKER
-========================= */
+===================================================== */
 
-function buyAuto(name, price) {
+function buyAuto(
+    name,
+    price
+) {
 
-    if (saveData.owned[name]) {
+
+    if (
+        saveData.owned[name]
+    ) {
+
 
         document.getElementById(
             "status"
         ).textContent =
             "🤖 Auto Clicker déjà acheté";
 
+
         return;
+
     }
 
-    if (saveData.fruit < price) {
+
+    if (
+        saveData.coins <
+        price
+    ) {
+
 
         document.getElementById(
             "status"
         ).textContent =
-            "❌ Pas assez de fruits";
+            "❌ Pas assez de 🪙 coins";
+
 
         return;
+
     }
 
-    saveData.fruit -= price;
 
-    saveData.owned[name] = true;
+    saveData.coins -=
+        price;
+
+
+    saveData.owned[name] =
+        true;
+
 
     document.getElementById(
         "status"
     ).textContent =
         "🤖 Auto Clicker acheté !";
 
+
     save();
+
     update();
+
 }
 
 
-/* =========================
-   AMÉLIORATIONS
-========================= */
+/* =====================================================
+   AMÉLIORER CLIC
+===================================================== */
 
-function upgradeClick(name) {
+function upgradeClick(
+    name
+) {
 
-    if (!saveData.owned[name])
+
+    if (
+        !saveData.owned[name]
+    )
         return;
+
 
     const current =
-        saveData.upgrades[name] || 0;
+        saveData.upgrades[name] ||
+        0;
 
-    if (current >= 3)
+
+    if (
+        current >= 3
+    )
         return;
+
 
     let multiplier;
 
-    if (current === 0)
+
+    if (
+        current === 0
+    )
         multiplier = 0.95;
-    else if (current === 1)
+
+    else if (
+        current === 1
+    )
         multiplier = 2;
+
     else
         multiplier = 5;
 
-    const price =
-        Math.floor(items[name].price * multiplier);
 
-    if (saveData.fruit < price) {
+    const price =
+        Math.floor(
+            items[name].price *
+            multiplier
+        );
+
+
+    if (
+        saveData.coins <
+        price
+    ) {
+
 
         document.getElementById(
             "status"
         ).textContent =
-            "❌ Pas assez de fruits";
+            "❌ Pas assez de 🪙 coins";
+
 
         return;
+
     }
 
-    saveData.fruit -= price;
+
+    saveData.coins -=
+        price;
+
 
     saveData.upgrades[name] =
         current + 1;
+
 
     document.getElementById(
         "status"
     ).textContent =
         "⬆️ Amélioration achetée !";
 
+
     save();
+
     update();
+
 }
 
 
-/* =========================
-   AMÉLIORATION AUTO
-========================= */
+/* =====================================================
+   AMÉLIORER AUTO
+===================================================== */
 
-function upgradeAuto(name, price) {
+function upgradeAuto(
+    name,
+    price
+) {
 
-    if (!saveData.owned[name])
+
+    if (
+        !saveData.owned[name]
+    )
         return;
+
 
     const current =
-        saveData.upgrades[name] || 0;
+        saveData.upgrades[name] ||
+        0;
 
-    if (current >= 3)
+
+    if (
+        current >= 3
+    )
         return;
+
 
     let multiplier;
 
-    if (current === 0)
+
+    if (
+        current === 0
+    )
         multiplier = 0.95;
-    else if (current === 1)
+
+    else if (
+        current === 1
+    )
         multiplier = 2;
+
     else
         multiplier = 5;
 
-    const upgradePrice =
-        Math.floor(price * multiplier);
 
-    if (saveData.fruit < upgradePrice) {
+    const upgradePrice =
+        Math.floor(
+            price *
+            multiplier
+        );
+
+
+    if (
+        saveData.coins <
+        upgradePrice
+    ) {
+
 
         document.getElementById(
             "status"
         ).textContent =
-            "❌ Pas assez de fruits";
+            "❌ Pas assez de 🪙 coins";
+
 
         return;
+
     }
 
-    saveData.fruit -= upgradePrice;
+
+    saveData.coins -=
+        upgradePrice;
+
 
     saveData.upgrades[name] =
         current + 1;
 
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "⬆️ Auto amélioré !";
+
+
     save();
+
     update();
+
 }
 
 
-/* =========================
-   AFFICHER AMÉLIORATION
-========================= */
+/* =====================================================
+   AFFICHER AMÉLIORATIONS
+===================================================== */
 
 function showUpgrade(
     name,
@@ -1171,38 +1988,64 @@ function showUpgrade(
     auto = false
 ) {
 
-    const element =
-        document.getElementById(elementId);
 
-    if (!saveData.owned[name]) {
+    const element =
+        document.getElementById(
+            elementId
+        );
+
+
+    if (
+        !saveData.owned[name]
+    ) {
 
         element.innerHTML = "";
 
         return;
+
     }
 
-    const level =
-        saveData.upgrades[name] || 0;
 
-    if (level >= 3) {
+    const level =
+        saveData.upgrades[name] ||
+        0;
+
+
+    if (
+        level >= 3
+    ) {
 
         element.innerHTML =
             "<p>✅ Niveau maximum</p>";
 
         return;
+
     }
+
 
     let multiplier;
 
-    if (level === 0)
+
+    if (
+        level === 0
+    )
         multiplier = 0.95;
-    else if (level === 1)
+
+    else if (
+        level === 1
+    )
         multiplier = 2;
+
     else
         multiplier = 5;
 
+
     const upgradePrice =
-        Math.floor(price * multiplier);
+        Math.floor(
+            price *
+            multiplier
+        );
+
 
     const nextPower =
         level === 0
@@ -1211,87 +2054,138 @@ function showUpgrade(
         ? "×3"
         : "×5";
 
-    element.innerHTML =
-        "<button onclick=\"" +
-        (
-            auto
-            ? "upgradeAuto('" +
-              name +
-              "'," +
-              price +
-              ")"
-            : "upgradeClick('" +
-              name +
-              "')"
-        ) +
-        "\">" +
-        "⬆️ Amélioration " +
-        (level + 1) +
-        " — " +
-        upgradePrice +
-        " 🍎 — " +
-        nextPower +
-        "</button>";
+
+    if (auto) {
+
+
+        element.innerHTML =
+
+            "<button onclick=\"upgradeAuto('" +
+            name +
+            "'," +
+            price +
+            ")\">" +
+
+            "⬆️ Amélioration " +
+            (level + 1) +
+            " — " +
+            upgradePrice +
+            " 🪙 — " +
+            nextPower +
+
+            "</button>";
+
+    }
+
+    else {
+
+
+        element.innerHTML =
+
+            "<button onclick=\"upgradeClick('" +
+            name +
+            "')\">" +
+
+            "⬆️ Amélioration " +
+            (level + 1) +
+            " — " +
+            upgradePrice +
+            " 🪙 — " +
+            nextPower +
+
+            "</button>";
+
+    }
+
 }
 
 
-/* =========================
+/* =====================================================
    MONDE 2
-========================= */
+===================================================== */
 
 function goWorld2() {
+
 
     if (
         saveData.world === 1 &&
         saveData.level >= 50
     ) {
 
+
         saveData.world = 2;
+
 
         saveData.fruit = 0;
 
+
         saveData.progress = 0;
+
 
         saveData.level = 1;
 
-        saveData.clickType = "normal";
+
+        saveData.clickType =
+            "normal";
+
 
         saveData.owned = {};
 
+
         saveData.upgrades = {};
+
 
         document.getElementById(
             "status"
         ).textContent =
             "🐼 Bienvenue dans le Monde 2 !";
 
+
         save();
 
         update();
+
     }
+
 }
 
 
-/* =========================
+/* =====================================================
    COOKIE
-========================= */
+===================================================== */
 
 function spawnCookie() {
 
-    const cookie =
-        document.getElementById("cookie");
 
-    cookie.classList.remove("hidden");
-    cookie.classList.remove("disappearing");
+    const cookie =
+        document.getElementById(
+            "cookie"
+        );
+
+
+    cookie.classList.remove(
+        "hidden"
+    );
+
+
+    cookie.classList.remove(
+        "disappearing"
+    );
+
 
     const area =
-        document.getElementById("animalArea");
+        document.getElementById(
+            "animalArea"
+        );
+
 
     const maxX =
         area.clientWidth - 55;
 
+
     const maxY =
         area.clientHeight - 65;
+
 
     cookie.style.left =
         Math.max(
@@ -1299,50 +2193,57 @@ function spawnCookie() {
             Math.random() * maxX
         ) + "px";
 
+
     cookie.style.top =
         Math.max(
             5,
             Math.random() * maxY
         ) + "px";
+
 }
 
 
-/* =========================
-   CLIC SUR LE COOKIE
-========================= */
+/* =====================================================
+   COOKIE CLICK
+===================================================== */
 
 document.getElementById(
     "cookie"
 ).onclick = function(event) {
 
+
     event.stopPropagation();
+
 
     if (
         this.classList.contains(
             "disappearing"
         )
-    ) {
+    )
         return;
-    }
+
 
     const bonus =
         getClickPower() * 2;
 
-    /*
-    Affichage +2 si le clic
-    normal donne 1.
-    */
 
-    showPlus(bonus);
+    showPlus(
+        bonus
+    );
 
-    addFruit(bonus);
 
-    /* Animation de disparition */
+    addFruit(
+        bonus
+    );
+
+
     this.classList.add(
         "disappearing"
     );
 
+
     animateAnimal();
+
 
     document.getElementById(
         "status"
@@ -1351,34 +2252,37 @@ document.getElementById(
         bonus +
         " ! Miam 😋";
 
+
     save();
+
     update();
 
-    /*
-    On attend la fin de l'animation
-    avant de cacher complètement
-    le cookie.
-    */
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        this.classList.add("hidden");
-        this.classList.remove("disappearing");
+            this.classList.add(
+                "hidden"
+            );
 
-    }, 450);
+            this.classList.remove(
+                "disappearing"
+            );
 
-    /*
-    Nouveau cookie après 20 secondes.
-    */
+        },
+        450
+    );
+
 
     setTimeout(
         spawnCookie,
         20000
     );
+
 };
 
 
-/* Premier cookie après 5 secondes */
+/* Premier cookie */
 
 setTimeout(
     spawnCookie,
@@ -1386,104 +2290,170 @@ setTimeout(
 );
 
 
-/* =========================
+/* =====================================================
    AUTO CLICKERS
-========================= */
+===================================================== */
 
-setInterval(function() {
+setInterval(
+    function() {
 
-    let amount = 0;
 
-    if (saveData.world === 1) {
+        let amount = 0;
 
-        if (saveData.owned.auto1) {
 
-            let multiplier = 1;
+        if (
+            saveData.world === 1
+        ) {
 
-            const u =
-                saveData.upgrades.auto1 || 0;
 
-            if (u === 1)
-                multiplier = 1.5;
+            if (
+                saveData.owned.auto1
+            ) {
 
-            if (u === 2)
-                multiplier = 3;
 
-            if (u === 3)
-                multiplier = 5;
+                let multiplier = 1;
 
-            amount +=
-                2 * multiplier;
+
+                const u =
+                    saveData.upgrades.auto1 ||
+                    0;
+
+
+                if (
+                    u === 1
+                )
+                    multiplier = 1.5;
+
+
+                if (
+                    u === 2
+                )
+                    multiplier = 3;
+
+
+                if (
+                    u === 3
+                )
+                    multiplier = 5;
+
+
+                amount +=
+                    2 *
+                    multiplier;
+
+            }
+
+
+            if (
+                saveData.owned.rainbow
+            ) {
+
+                amount += 5;
+
+            }
+
         }
 
-        if (saveData.owned.rainbow) {
 
-            amount += 5;
+        else {
+
+
+            if (
+                saveData.owned.auto2
+            ) {
+
+
+                let multiplier = 1;
+
+
+                const u =
+                    saveData.upgrades.auto2 ||
+                    0;
+
+
+                if (
+                    u === 1
+                )
+                    multiplier = 1.5;
+
+
+                if (
+                    u === 2
+                )
+                    multiplier = 3;
+
+
+                if (
+                    u === 3
+                )
+                    multiplier = 5;
+
+
+                amount +=
+                    300 *
+                    multiplier;
+
+            }
 
         }
 
-    }
 
-    else {
+        if (
+            amount > 0
+        ) {
 
-        if (saveData.owned.auto2) {
 
-            let multiplier = 1;
+            addFruit(
+                amount
+            );
 
-            const u =
-                saveData.upgrades.auto2 || 0;
 
-            if (u === 1)
-                multiplier = 1.5;
+            save();
 
-            if (u === 2)
-                multiplier = 3;
+            update();
 
-            if (u === 3)
-                multiplier = 5;
-
-            amount +=
-                300 * multiplier;
         }
-    }
-
-    if (amount > 0) {
-
-        addFruit(amount);
-
-        save();
-        update();
-
-    }
-
-}, 1000);
 
 
-/* =========================
-   MISE À JOUR DE L'ÉCRAN
-========================= */
+    },
+    1000
+);
+
+
+/* =====================================================
+   MISE À JOUR
+===================================================== */
 
 function update() {
+
 
     document.getElementById(
         "coins"
     ).textContent =
-        Math.floor(saveData.coins);
+        Math.floor(
+            saveData.coins
+        );
+
 
     document.getElementById(
         "fruit"
     ).textContent =
-        Math.floor(saveData.fruit);
+        Math.floor(
+            saveData.fruit
+        );
+
 
     document.getElementById(
         "level"
     ).textContent =
         saveData.level;
 
+
     const max =
         saveData.world === 1
         ? 50
         : 100;
+
 
     document.getElementById(
         "maxLevel"
@@ -1495,33 +2465,41 @@ function update() {
        MONDE 1
     ===================== */
 
-    if (saveData.world === 1) {
+    if (
+        saveData.world === 1
+    ) {
+
 
         document.getElementById(
             "worldTitle"
         ).textContent =
             "🌍 Monde 1 — 🐹 Capybara";
 
+
         document.getElementById(
             "animal"
         ).src =
-            "capybara.png";
+            "IMG_1419.jpeg";
+
 
         document.getElementById(
             "fruitIcon"
         ).textContent =
             "🍎";
 
+
         document.getElementById(
             "needIcon"
         ).textContent =
             "🍎";
+
 
         document.getElementById(
             "shop1"
         ).classList.remove(
             "hidden"
         );
+
 
         document.getElementById(
             "shop2"
@@ -1538,25 +2516,30 @@ function update() {
 
     else {
 
+
         document.getElementById(
             "worldTitle"
         ).textContent =
             "🌍 Monde 2 — 🐼 Panda";
 
+
         document.getElementById(
             "animal"
         ).src =
-            "panda.png";
+            "IMG_1420.jpeg";
+
 
         document.getElementById(
             "fruitIcon"
         ).textContent =
             "🎋";
 
+
         document.getElementById(
             "needIcon"
         ).textContent =
             "🎋";
+
 
         document.getElementById(
             "shop1"
@@ -1564,16 +2547,18 @@ function update() {
             "hidden"
         );
 
+
         document.getElementById(
             "shop2"
         ).classList.remove(
             "hidden"
         );
+
     }
 
 
     /* =====================
-       STADE DE L'ANIMAL
+       STADE ANIMAL
     ===================== */
 
     const animal =
@@ -1581,33 +2566,74 @@ function update() {
             "animal"
         );
 
-    animal.className =
-        "animal";
+
+    /*
+       IMPORTANT :
+       On ne touche PAS aux
+       classes eating / happy.
+    */
+
+    animal.classList.remove(
+        "bebe",
+        "enfant",
+        "ado",
+        "adulte"
+    );
 
 
-    if (saveData.level <= 5)
-        animal.classList.add("bebe");
+    if (
+        saveData.level <= 5
+    ) {
 
-    else if (saveData.level <= 10)
-        animal.classList.add("enfant");
+        animal.classList.add(
+            "bebe"
+        );
 
-    else if (saveData.level <= 25)
-        animal.classList.add("ado");
+    }
 
-    else
-        animal.classList.add("adulte");
+    else if (
+        saveData.level <= 10
+    ) {
+
+        animal.classList.add(
+            "enfant"
+        );
+
+    }
+
+    else if (
+        saveData.level <= 25
+    ) {
+
+        animal.classList.add(
+            "ado"
+        );
+
+    }
+
+    else {
+
+        animal.classList.add(
+            "adulte"
+        );
+
+    }
 
 
     /* =====================
        PROGRESSION
     ===================== */
 
-    if (saveData.level >= max) {
+    if (
+        saveData.level >= max
+    ) {
+
 
         document.getElementById(
             "need"
         ).textContent =
             "MAX";
+
 
         document.getElementById(
             "progressBar"
@@ -1618,16 +2644,19 @@ function update() {
 
     else {
 
+
         const needed =
             needForLevel(
                 saveData.level,
                 saveData.world
             );
 
+
         document.getElementById(
             "need"
         ).textContent =
             needed;
+
 
         document.getElementById(
             "progressBar"
@@ -1635,13 +2664,15 @@ function update() {
             Math.min(
                 100,
                 saveData.progress /
-                needed * 100
+                needed *
+                100
             ) + "%";
+
     }
 
 
     /* =====================
-       DÉBLOCAGE MONDE 2
+       MONDE 2
     ===================== */
 
     if (
@@ -1649,14 +2680,18 @@ function update() {
         saveData.level >= 50
     ) {
 
+
         document.getElementById(
             "world2Button"
-        ).disabled = false;
+        ).disabled =
+            false;
+
 
         document.getElementById(
             "world2Button"
         ).textContent =
             "🌍 Entrer dans le Monde 2";
+
 
         document.getElementById(
             "world2Card"
@@ -1664,15 +2699,17 @@ function update() {
             "locked"
         );
 
+
         document.getElementById(
             "world2Text"
         ).textContent =
             "🎉 Monde 2 débloqué !";
+
     }
 
 
     /* =====================
-       BOUTONS AMÉLIORATIONS
+       AMÉLIORATIONS
     ===================== */
 
     showUpgrade(
@@ -1681,17 +2718,20 @@ function update() {
         "goldUpgrade"
     );
 
+
     showUpgrade(
         "diamond",
         100,
         "diamondUpgrade"
     );
 
+
     showUpgrade(
         "rainbow",
         750,
         "rainbowUpgrade"
     );
+
 
     showUpgrade(
         "auto1",
@@ -1700,11 +2740,13 @@ function update() {
         true
     );
 
+
     showUpgrade(
         "galaxy",
         1500,
         "galaxyUpgrade"
     );
+
 
     showUpgrade(
         "lightning",
@@ -1712,11 +2754,13 @@ function update() {
         "lightningUpgrade"
     );
 
+
     showUpgrade(
         "volcano",
         50000,
         "volcanoUpgrade"
     );
+
 
     showUpgrade(
         "auto2",
@@ -1724,14 +2768,17 @@ function update() {
         "auto2Upgrade",
         true
     );
+
 }
 
 
-/* =========================
+/* =====================================================
    DÉMARRAGE
-========================= */
+===================================================== */
 
 update();
+
+save();
 
 </script>
 
