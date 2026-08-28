@@ -1,401 +1,1740 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Capybara Clicker</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coin Rush</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            user-select: none;
-        }
+<style>
+* {
+    box-sizing: border-box;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #b8e6ff, #d9ffd0);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #17172b, #34205a);
+    color: white;
+    text-align: center;
+}
 
-        .game {
-            width: 95%;
-            max-width: 500px;
-            text-align: center;
-        }
+.game {
+    max-width: 520px;
+    margin: auto;
+    padding: 15px;
+}
 
-        h1 {
-            margin-bottom: 8px;
-            color: #333;
-        }
+.card {
+    background: #25253d;
+    border-radius: 20px;
+    padding: 15px;
+    margin: 12px 0;
+}
 
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            background: white;
-            border-radius: 20px;
-            padding: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 5px 15px #0002;
-            font-size: 18px;
-            font-weight: bold;
-        }
+.stats {
+    display: flex;
+    gap: 10px;
+}
 
-        .character-zone {
-            position: relative;
-            height: 380px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+.stat {
+    flex: 1;
+    background: #151525;
+    padding: 12px;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
 
-        #capybara {
-            width: 270px;
-            max-width: 75%;
-            cursor: pointer;
-            transition: transform 0.15s ease;
-            filter: drop-shadow(0 10px 8px #0002);
-        }
+.animalArea {
+    height: 280px;
+    background: linear-gradient(#8bdcff, #e7fbff);
+    border-radius: 18px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
 
-        #capybara.eat {
-            animation: eat 0.45s ease;
-        }
+.animal {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+    transition: 0.4s;
+}
 
-        #capybara.happy {
-            animation: happy 0.7s ease;
-        }
+.bebe {
+    transform: scale(0.75);
+}
 
-        @keyframes eat {
-            0% {
-                transform: scale(1) rotate(0deg);
-            }
-            25% {
-                transform: scale(1.12) rotate(-4deg);
-            }
-            50% {
-                transform: scale(0.94) rotate(4deg);
-            }
-            75% {
-                transform: scale(1.08) rotate(-2deg);
-            }
-            100% {
-                transform: scale(1) rotate(0deg);
-            }
-        }
+.enfant {
+    transform: scale(0.85);
+}
 
-        @keyframes happy {
-            0% {
-                transform: scale(1);
-            }
-            30% {
-                transform: scale(1.12) translateY(-10px);
-            }
-            60% {
-                transform: scale(1.05) translateY(0);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
+.ado {
+    transform: scale(0.95);
+}
 
-        .cookie {
-            position: absolute;
-            width: 75px;
-            height: 75px;
-            background: #c98242;
-            border-radius: 50%;
-            border: 6px solid #9b5c2c;
-            cursor: pointer;
-            box-shadow: 0 5px 10px #0003;
+.adulte {
+    transform: scale(1.05);
+}
 
-            left: 50%;
-            bottom: 35px;
-            transform: translateX(-50%);
+/* Animation quand l'animal mange */
+.animal.eating {
+    animation: eating 0.55s ease;
+}
 
-            transition:
-                opacity 0.25s ease,
-                transform 0.35s ease;
-        }
+@keyframes eating {
+    0% {
+        transform: scale(1) rotate(0deg);
+    }
 
-        .cookie::before,
-        .cookie::after {
-            content: "";
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background: #613719;
-            border-radius: 50%;
-        }
+    25% {
+        transform: scale(1.12) rotate(-4deg);
+    }
 
-        .cookie::before {
-            top: 18px;
-            left: 18px;
-            box-shadow:
-                28px 4px #613719,
-                10px 28px #613719,
-                40px 35px #613719;
-        }
+    50% {
+        transform: scale(0.92) rotate(4deg);
+    }
 
-        .cookie::after {
-            top: 45px;
-            left: 27px;
-            box-shadow: 20px -20px #613719;
-        }
+    75% {
+        transform: scale(1.08) rotate(-2deg);
+    }
 
-        .cookie.disappear {
-            opacity: 0;
-            transform: translateX(-50%) scale(0.3) rotate(30deg);
-        }
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
 
-        .plus {
-            position: absolute;
-            left: 50%;
-            bottom: 110px;
-            transform: translateX(-50%);
-            font-size: 30px;
-            font-weight: bold;
-            color: #27a844;
-            pointer-events: none;
-            animation: plusAnimation 0.8s ease-out forwards;
-            z-index: 10;
-        }
+/* Animation quand il est heureux */
+.animal.happy {
+    animation: happy 0.8s ease;
+}
 
-        @keyframes plusAnimation {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, 20px) scale(0.7);
-            }
+@keyframes happy {
+    0% {
+        transform: scale(1);
+    }
 
-            20% {
-                opacity: 1;
-                transform: translate(-50%, 0) scale(1.15);
-            }
+    30% {
+        transform: scale(1.15) translateY(-8px);
+    }
 
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -70px) scale(1);
-            }
-        }
+    60% {
+        transform: scale(1.05) translateY(0);
+    }
 
-        .panda {
-            margin-top: 10px;
-        }
+    100% {
+        transform: scale(1);
+    }
+}
 
-        #panda {
-            width: 100px;
-        }
+/* Coeur uniquement quand on monte de niveau */
+.heart {
+    position: absolute;
+    font-size: 35px;
+    pointer-events: none;
+    animation: heart 1s forwards;
+}
 
-        .level-bar {
-            width: 100%;
-            height: 15px;
-            background: #ffffffaa;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
+@keyframes heart {
+    0% {
+        opacity: 1;
+        transform: translateY(10px) scale(0.6);
+    }
 
-        #progress {
-            height: 100%;
-            width: 0%;
-            background: #6acb5b;
-            transition: width 0.3s ease;
-        }
+    50% {
+        opacity: 1;
+        transform: translateY(-40px) scale(1.2);
+    }
 
-        .hearts {
-            margin-top: 8px;
-            font-size: 25px;
-            letter-spacing: 3px;
-        }
+    100% {
+        opacity: 0;
+        transform: translateY(-90px) scale(1);
+    }
+}
 
-        .message {
-            min-height: 30px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #555;
-        }
-    </style>
+/* COOKIE */
+.cookie {
+    position: absolute;
+    font-size: 45px;
+    cursor: pointer;
+    z-index: 5;
+
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.45s cubic-bezier(.2,.8,.2,1);
+}
+
+.cookie.disappearing {
+    opacity: 0;
+    transform: scale(0.2) rotate(35deg);
+    pointer-events: none;
+}
+
+.cookie.hidden {
+    display: none;
+}
+
+/* +1 / +2 */
+.plusOne {
+    position: absolute;
+    font-size: 32px;
+    font-weight: bold;
+    color: #20c95c;
+    text-shadow: 0 2px 4px #0005;
+    pointer-events: none;
+    z-index: 20;
+
+    animation: plusAnimation 0.85s ease-out forwards;
+}
+
+@keyframes plusAnimation {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 20px) scale(0.6);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1.2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -75px) scale(1);
+    }
+}
+
+.progress {
+    height: 15px;
+    background: #111;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progressBar {
+    height: 100%;
+    width: 0%;
+    background: #ffd43b;
+    transition: 0.3s;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 5px 0;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #454563;
+    color: white;
+}
+
+.mainButton {
+    background: #ffd43b;
+    color: #171717;
+    font-size: 20px;
+}
+
+.item {
+    background: #191929;
+    padding: 12px;
+    border-radius: 15px;
+    margin: 8px 0;
+}
+
+.status {
+    min-height: 25px;
+    font-weight: bold;
+}
+
+.small {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.locked {
+    opacity: 0.55;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Effets */
+
+.gold {
+    animation: gold 0.45s;
+}
+
+@keyframes gold {
+    50% {
+        box-shadow: 0 0 30px gold, 0 0 60px gold;
+    }
+}
+
+.diamond {
+    animation: diamond 0.5s;
+}
+
+@keyframes diamond {
+    50% {
+        box-shadow: 0 0 30px cyan, 0 0 60px white;
+    }
+}
+
+.rainbow {
+    animation: rainbow 0.6s;
+}
+
+@keyframes rainbow {
+    0% { box-shadow: 0 0 20px red; }
+    25% { box-shadow: 0 0 30px orange; }
+    50% { box-shadow: 0 0 35px lime; }
+    75% { box-shadow: 0 0 35px cyan; }
+    100% { box-shadow: 0 0 20px violet; }
+}
+
+.galaxy {
+    animation: galaxy 0.6s;
+}
+
+@keyframes galaxy {
+    50% {
+        box-shadow: 0 0 35px violet, 0 0 70px purple;
+    }
+}
+
+.lightning {
+    animation: lightning 0.5s;
+}
+
+@keyframes lightning {
+    25% { box-shadow: 0 0 35px white; }
+    50% { box-shadow: 0 0 60px cyan; }
+    75% { box-shadow: 0 0 35px white; }
+}
+
+.lava {
+    animation: lava 0.5s;
+}
+
+@keyframes lava {
+    50% {
+        box-shadow: 0 0 35px orange, 0 0 70px red;
+    }
+}
+</style>
 </head>
 
 <body>
 
 <div class="game">
 
-    <h1>🐹 Capybara Clicker</h1>
+<h1>🪙 Coin Rush</h1>
 
-    <div class="stats">
-        <div>🍪 <span id="score">0</span></div>
-        <div>⭐ Niveau <span id="level">1</span></div>
+<div class="card stats">
+    <div class="stat">
+        🪙 <span id="coins">0</span>
     </div>
 
-    <div class="character-zone">
-
-        <img
-            id="capybara"
-            src="capybara.png"
-            alt="Capybara"
-        >
-
-        <div
-            id="cookie"
-            class="cookie"
-            onclick="eatCookie()"
-        ></div>
-
+    <div class="stat">
+        <span id="fruitIcon">🍎</span>
+        <span id="fruit">0</span>
     </div>
+</div>
 
-    <div class="message" id="message">
-        Donne un cookie au capybara ! 🍪
-    </div>
+<div class="card">
 
-    <div>
-        Progression vers le niveau suivant :
-        <div class="level-bar">
-            <div id="progress"></div>
-        </div>
-    </div>
+<h2 id="worldTitle">🌍 Monde 1 — 🐹 Capybara</h2>
 
-    <div class="hearts" id="hearts">
-        ❤️
-    </div>
+<div class="animalArea" id="animalArea">
 
-    <div class="panda">
-        <img
-            id="panda"
-            src="panda.png"
-            alt="Panda"
-        >
-    </div>
+<img
+    id="animal"
+    class="animal bebe"
+    src="capybara.png"
+    alt="Capybara"
+>
+
+<div id="cookie" class="cookie hidden">🍪</div>
 
 </div>
 
+<p>
+Niveau <b><span id="level">1</span></b>/<span id="maxLevel">50</span>
+</p>
+
+<div class="progress">
+    <div id="progressBar" class="progressBar"></div>
+</div>
+
+<p class="small">
+    <span id="need">40</span>
+    <span id="needIcon">🍎</span>
+    pour le prochain niveau
+</p>
+
+</div>
+
+<div class="card">
+
+<button id="clickButton" class="mainButton">
+    👆 CLIQUER
+</button>
+
+<div id="status" class="status"></div>
+
+</div>
+
+
+<!-- MONDE 1 -->
+
+<div id="shop1" class="card">
+
+<h2>🛒 Objets — Monde 1</h2>
+
+<div class="item">
+
+<b>🟡 Clic Gold</b>
+
+<p>50 🪙 → 2 🍎 par clic</p>
+
+<p>Effet doré ✨</p>
+
+<button onclick="buyClick('gold',50)">
+Acheter / utiliser
+</button>
+
+<div id="goldUpgrade"></div>
+
+</div>
+
+
+<div class="item">
+
+<b>💎 Clic Diamond</b>
+
+<p>100 🪙 → 3 🍎 par clic</p>
+
+<p>Effet diamant 💎</p>
+
+<button onclick="buyClick('diamond',100)">
+Acheter / utiliser
+</button>
+
+<div id="diamondUpgrade"></div>
+
+</div>
+
+
+<div class="item">
+
+<b>🤖 Auto Clicker</b>
+
+<p>500 🪙 → 2 🍎 par seconde</p>
+
+<button onclick="buyAuto('auto1',500)">
+Acheter / utiliser
+</button>
+
+<div id="auto1Upgrade"></div>
+
+</div>
+
+
+<div class="item">
+
+<b>🌈 Clic Rainbow</b>
+
+<p>750 🪙 → 10 🍎 par clic</p>
+
+<p>+5 🍎 par seconde</p>
+
+<p>Effet rainbow 🌈</p>
+
+<button onclick="buyClick('rainbow',750)">
+Acheter / utiliser
+</button>
+
+<div id="rainbowUpgrade"></div>
+
+</div>
+
+</div>
+
+
+<!-- MONDES -->
+
+<div class="card">
+
+<h2>🌍 Mondes</h2>
+
+<div class="item">
+
+<h3>🌍 Monde 1 — 🐹</h3>
+
+<p>Capybara — 50 niveaux</p>
+
+</div>
+
+
+<div id="world2Card" class="item locked">
+
+<h3>🔒 Monde 2 — 🐼</h3>
+
+<p id="world2Text">
+Atteins le niveau 50 du Capybara.
+</p>
+
+<button id="world2Button" disabled onclick="goWorld2()">
+🔒 Niveau 50 requis
+</button>
+
+</div>
+
+
+<div class="item locked">
+
+<h3>🔒 Monde 3 — 🦎</h3>
+
+<p>Axolote</p>
+
+<b>Bientôt disponible</b>
+
+</div>
+
+</div>
+
+
+<!-- MONDE 2 -->
+
+<div id="shop2" class="card hidden">
+
+<h2>🌍 Monde 2 — 🐼 Panda</h2>
+
+<div class="item">
+
+<b>🌌 Clic Galaxie</b>
+
+<p>1 500 🎋 → 50 🎋 par clic</p>
+
+<p>Effet galaxie violet 🟣</p>
+
+<button onclick="buyClick('galaxy',1500)">
+Acheter / utiliser
+</button>
+
+<div id="galaxyUpgrade"></div>
+
+</div>
+
+
+<div class="item">
+
+<b>⚡ Clic Foudre</b>
+
+<p>6 000 🎋 → 100 🎋 par clic</p>
+
+<p>Effet éclair ⚡</p>
+
+<button onclick="buyClick('lightning',6000)">
+Acheter / utiliser
+</button>
+
+<div id="lightningUpgrade"></div>
+
+</div>
+
+
+<div class="item">
+
+<b>🌋 Clic Volcan</b>
+
+<p>50 000 🎋 → 180 🎋 par clic</p>
+
+<p>Effet lave 🔥</p>
+
+<button onclick="buyClick('volcano',50000)">
+Acheter / utiliser
+</button>
+
+<div id="volcanoUpgrade"></div>
+
+</div>
+
+
+<div class="item">
+
+<b>🤖 Auto Clicker</b>
+
+<p>100 000 🎋 → 300 🎋 par seconde</p>
+
+<button onclick="buyAuto('auto2',100000)">
+Acheter / utiliser
+</button>
+
+<div id="auto2Upgrade"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
 <script>
 
-    let score = 0;
-    let level = 1;
-    let hearts = 1;
+/* =========================
+   SAUVEGARDE
+========================= */
 
-    // Nombre de cookies nécessaires pour passer au niveau suivant
-    let cookiesForNextLevel = 10;
+let saveData = JSON.parse(
+    localStorage.getItem("coinRush")
+);
 
-    const capybara = document.getElementById("capybara");
-    const cookie = document.getElementById("cookie");
+if (!saveData) {
 
-    function eatCookie() {
+    saveData = {
+        coins: 0,
+        world: 1,
+        fruit: 0,
+        level: 1,
+        progress: 0,
+        clickType: "normal",
+        owned: {},
+        upgrades: {}
+    };
 
-        // Évite plusieurs clics pendant la disparition
-        if (cookie.classList.contains("disappear")) {
-            return;
+}
+
+
+/* =========================
+   PRIX ET PUISSANCES
+========================= */
+
+const items = {
+
+    gold: {
+        price: 50,
+        power: 2
+    },
+
+    diamond: {
+        price: 100,
+        power: 3
+    },
+
+    rainbow: {
+        price: 750,
+        power: 10
+    },
+
+    galaxy: {
+        price: 1500,
+        power: 50
+    },
+
+    lightning: {
+        price: 6000,
+        power: 100
+    },
+
+    volcano: {
+        price: 50000,
+        power: 180
+    }
+
+};
+
+
+/* =========================
+   SAUVEGARDER
+========================= */
+
+function save() {
+
+    localStorage.setItem(
+        "coinRush",
+        JSON.stringify(saveData)
+    );
+
+}
+
+
+/* =========================
+   BESOIN POUR LE NIVEAU
+========================= */
+
+function needForLevel(level, world) {
+
+    if (world === 1) {
+
+        const values = {
+
+            1: 40,
+            2: 60,
+            3: 80,
+            4: 110,
+            5: 150,
+            6: 200,
+            7: 250,
+            8: 300,
+            9: 360,
+            10: 440,
+            11: 560,
+            12: 700,
+            13: 850,
+            14: 1000
+
+        };
+
+        if (values[level]) {
+            return values[level];
         }
 
-        // Pour l'instant chaque cookie donne +1
-        // Tu peux changer cette valeur plus tard
-        const gain = 1;
+        return Math.floor(
+            1000 * Math.pow(1.18, level - 15)
+        );
 
-        score += gain;
-
-        // Affichage du score
-        document.getElementById("score").textContent = score;
-
-        // Animation du capybara
-        capybara.classList.remove("eat");
-        capybara.classList.remove("happy");
-
-        void capybara.offsetWidth;
-
-        capybara.classList.add("eat");
-
-        // Création du +1 ou +2
-        showPlus(gain);
-
-        // Cookie disparaît doucement
-        cookie.classList.add("disappear");
-
-        // Vérification du niveau
-        checkLevel();
-
-        // Le capybara devient heureux
-        document.getElementById("message").textContent =
-            "Miam ! 😋 Le capybara est heureux ! ❤️";
-
-        capybara.classList.add("happy");
-
-        // Nouveau cookie après l'animation
-        setTimeout(() => {
-
-            cookie.classList.remove("disappear");
-
-        }, 450);
     }
 
+    return Math.floor(
+        200 * Math.pow(1.075, level - 1)
+    );
 
-    function showPlus(amount) {
+}
 
-        const plus = document.createElement("div");
 
-        plus.className = "plus";
-        plus.textContent = "+" + amount;
+/* =========================
+   PUISSANCE DU CLIC
+========================= */
 
-        document.querySelector(".character-zone").appendChild(plus);
+function getClickPower() {
 
-        setTimeout(() => {
-            plus.remove();
-        }, 800);
+    if (saveData.world === 1) {
+
+        if (saveData.clickType === "gold")
+            return upgradedPower("gold");
+
+        if (saveData.clickType === "diamond")
+            return upgradedPower("diamond");
+
+        if (saveData.clickType === "rainbow")
+            return upgradedPower("rainbow");
+
+        return 1;
     }
 
+    if (saveData.clickType === "galaxy")
+        return upgradedPower("galaxy");
 
-    function checkLevel() {
+    if (saveData.clickType === "lightning")
+        return upgradedPower("lightning");
 
-        const previousLevel = level;
+    if (saveData.clickType === "volcano")
+        return upgradedPower("volcano");
 
-        level = Math.floor(score / cookiesForNextLevel) + 1;
+    return 5;
+}
 
-        // Si un nouveau niveau est atteint
-        if (level > previousLevel) {
 
-            hearts++;
+/* =========================
+   AMÉLIORATIONS
+========================= */
 
-            document.getElementById("level").textContent = level;
+function upgradedPower(name) {
 
-            document.getElementById("hearts").textContent =
-                "❤️".repeat(hearts);
+    const base = items[name].power;
 
-            document.getElementById("message").textContent =
-                "🎉 Nouveau niveau ! +1 ❤️";
+    const upgrade =
+        saveData.upgrades[name] || 0;
 
-            capybara.classList.remove("happy");
+    if (upgrade === 1)
+        return Math.floor(base * 1.5);
 
-            void capybara.offsetWidth;
+    if (upgrade === 2)
+        return base * 3;
 
-            capybara.classList.add("happy");
+    if (upgrade === 3)
+        return base * 5;
 
-        } else {
+    return base;
+}
 
-            document.getElementById("level").textContent = level;
+
+/* =========================
+   AFFICHER +1 / +2
+========================= */
+
+function showPlus(amount) {
+
+    const plus =
+        document.createElement("div");
+
+    plus.className = "plusOne";
+
+    plus.textContent = "+" + amount;
+
+    const area =
+        document.getElementById("animalArea");
+
+    const x =
+        area.clientWidth / 2;
+
+    const y =
+        area.clientHeight / 2;
+
+    plus.style.left = x + "px";
+    plus.style.top = y + "px";
+
+    area.appendChild(plus);
+
+    setTimeout(function() {
+        plus.remove();
+    }, 850);
+}
+
+
+/* =========================
+   ANIMATION ANIMAL
+========================= */
+
+function animateAnimal() {
+
+    const animal =
+        document.getElementById("animal");
+
+    animal.classList.remove("eating");
+    animal.classList.remove("happy");
+
+    void animal.offsetWidth;
+
+    animal.classList.add("eating");
+
+    setTimeout(function() {
+
+        animal.classList.remove("eating");
+        animal.classList.add("happy");
+
+    }, 500);
+
+}
+
+
+/* =========================
+   CLIC PRINCIPAL
+========================= */
+
+document.getElementById(
+    "clickButton"
+).onclick = function() {
+
+    const amount =
+        getClickPower();
+
+    addFruit(amount);
+
+    /* Affiche +1, +2, +3, etc. */
+    showPlus(amount);
+
+    /* Animation du capybara / panda */
+    animateAnimal();
+
+    playEffect();
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "😋 Miam ! +" + amount;
+
+    save();
+
+    update();
+};
+
+
+/* =========================
+   AJOUTER DES FRUITS
+========================= */
+
+function addFruit(amount) {
+
+    saveData.progress += amount;
+
+    while (true) {
+
+        const max =
+            saveData.world === 1 ? 50 : 100;
+
+        if (saveData.level >= max)
+            break;
+
+        const needed =
+            needForLevel(
+                saveData.level,
+                saveData.world
+            );
+
+        if (saveData.progress < needed)
+            break;
+
+        saveData.progress -= needed;
+
+        saveData.level++;
+
+        /* ❤️ UN SEUL CŒUR PAR NIVEAU */
+        createHeart();
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "🎉 Niveau " +
+            saveData.level +
+            " ! +1 ❤️";
+    }
+}
+
+
+/* =========================
+   CRÉER LE CŒUR
+========================= */
+
+function createHeart() {
+
+    const heart =
+        document.createElement("div");
+
+    heart.className = "heart";
+
+    heart.textContent = "❤️";
+
+    const area =
+        document.getElementById(
+            "animalArea"
+        );
+
+    heart.style.left =
+        (30 + Math.random() * 40) + "%";
+
+    heart.style.top =
+        (45 + Math.random() * 20) + "%";
+
+    area.appendChild(heart);
+
+    setTimeout(function() {
+        heart.remove();
+    }, 1000);
+}
+
+
+/* =========================
+   EFFETS DES CLICS
+========================= */
+
+function playEffect() {
+
+    const button =
+        document.getElementById(
+            "clickButton"
+        );
+
+    button.className =
+        "mainButton";
+
+    void button.offsetWidth;
+
+    if (saveData.clickType === "gold")
+        button.classList.add("gold");
+
+    if (saveData.clickType === "diamond")
+        button.classList.add("diamond");
+
+    if (saveData.clickType === "rainbow")
+        button.classList.add("rainbow");
+
+    if (saveData.clickType === "galaxy")
+        button.classList.add("galaxy");
+
+    if (saveData.clickType === "lightning")
+        button.classList.add("lightning");
+
+    if (saveData.clickType === "volcano")
+        button.classList.add("lava");
+}
+
+
+/* =========================
+   ACHETER / UTILISER CLIC
+========================= */
+
+function buyClick(name, price) {
+
+    if (saveData.owned[name]) {
+
+        saveData.clickType = name;
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "✅ " + name + " sélectionné";
+
+        save();
+        update();
+
+        return;
+    }
+
+    if (saveData.fruit < price) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "❌ Pas assez de fruits";
+
+        return;
+    }
+
+    saveData.fruit -= price;
+
+    saveData.owned[name] = true;
+
+    saveData.clickType = name;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "🎉 Objet acheté !";
+
+    save();
+    update();
+}
+
+
+/* =========================
+   AUTO CLICKER
+========================= */
+
+function buyAuto(name, price) {
+
+    if (saveData.owned[name]) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "🤖 Auto Clicker déjà acheté";
+
+        return;
+    }
+
+    if (saveData.fruit < price) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "❌ Pas assez de fruits";
+
+        return;
+    }
+
+    saveData.fruit -= price;
+
+    saveData.owned[name] = true;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "🤖 Auto Clicker acheté !";
+
+    save();
+    update();
+}
+
+
+/* =========================
+   AMÉLIORATIONS
+========================= */
+
+function upgradeClick(name) {
+
+    if (!saveData.owned[name])
+        return;
+
+    const current =
+        saveData.upgrades[name] || 0;
+
+    if (current >= 3)
+        return;
+
+    let multiplier;
+
+    if (current === 0)
+        multiplier = 0.95;
+    else if (current === 1)
+        multiplier = 2;
+    else
+        multiplier = 5;
+
+    const price =
+        Math.floor(items[name].price * multiplier);
+
+    if (saveData.fruit < price) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "❌ Pas assez de fruits";
+
+        return;
+    }
+
+    saveData.fruit -= price;
+
+    saveData.upgrades[name] =
+        current + 1;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "⬆️ Amélioration achetée !";
+
+    save();
+    update();
+}
+
+
+/* =========================
+   AMÉLIORATION AUTO
+========================= */
+
+function upgradeAuto(name, price) {
+
+    if (!saveData.owned[name])
+        return;
+
+    const current =
+        saveData.upgrades[name] || 0;
+
+    if (current >= 3)
+        return;
+
+    let multiplier;
+
+    if (current === 0)
+        multiplier = 0.95;
+    else if (current === 1)
+        multiplier = 2;
+    else
+        multiplier = 5;
+
+    const upgradePrice =
+        Math.floor(price * multiplier);
+
+    if (saveData.fruit < upgradePrice) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "❌ Pas assez de fruits";
+
+        return;
+    }
+
+    saveData.fruit -= upgradePrice;
+
+    saveData.upgrades[name] =
+        current + 1;
+
+    save();
+    update();
+}
+
+
+/* =========================
+   AFFICHER AMÉLIORATION
+========================= */
+
+function showUpgrade(
+    name,
+    price,
+    elementId,
+    auto = false
+) {
+
+    const element =
+        document.getElementById(elementId);
+
+    if (!saveData.owned[name]) {
+
+        element.innerHTML = "";
+
+        return;
+    }
+
+    const level =
+        saveData.upgrades[name] || 0;
+
+    if (level >= 3) {
+
+        element.innerHTML =
+            "<p>✅ Niveau maximum</p>";
+
+        return;
+    }
+
+    let multiplier;
+
+    if (level === 0)
+        multiplier = 0.95;
+    else if (level === 1)
+        multiplier = 2;
+    else
+        multiplier = 5;
+
+    const upgradePrice =
+        Math.floor(price * multiplier);
+
+    const nextPower =
+        level === 0
+        ? "×1,5"
+        : level === 1
+        ? "×3"
+        : "×5";
+
+    element.innerHTML =
+        "<button onclick=\"" +
+        (
+            auto
+            ? "upgradeAuto('" +
+              name +
+              "'," +
+              price +
+              ")"
+            : "upgradeClick('" +
+              name +
+              "')"
+        ) +
+        "\">" +
+        "⬆️ Amélioration " +
+        (level + 1) +
+        " — " +
+        upgradePrice +
+        " 🍎 — " +
+        nextPower +
+        "</button>";
+}
+
+
+/* =========================
+   MONDE 2
+========================= */
+
+function goWorld2() {
+
+    if (
+        saveData.world === 1 &&
+        saveData.level >= 50
+    ) {
+
+        saveData.world = 2;
+
+        saveData.fruit = 0;
+
+        saveData.progress = 0;
+
+        saveData.level = 1;
+
+        saveData.clickType = "normal";
+
+        saveData.owned = {};
+
+        saveData.upgrades = {};
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "🐼 Bienvenue dans le Monde 2 !";
+
+        save();
+
+        update();
+    }
+}
+
+
+/* =========================
+   COOKIE
+========================= */
+
+function spawnCookie() {
+
+    const cookie =
+        document.getElementById("cookie");
+
+    cookie.classList.remove("hidden");
+    cookie.classList.remove("disappearing");
+
+    const area =
+        document.getElementById("animalArea");
+
+    const maxX =
+        area.clientWidth - 55;
+
+    const maxY =
+        area.clientHeight - 65;
+
+    cookie.style.left =
+        Math.max(
+            5,
+            Math.random() * maxX
+        ) + "px";
+
+    cookie.style.top =
+        Math.max(
+            5,
+            Math.random() * maxY
+        ) + "px";
+}
+
+
+/* =========================
+   CLIC SUR LE COOKIE
+========================= */
+
+document.getElementById(
+    "cookie"
+).onclick = function(event) {
+
+    event.stopPropagation();
+
+    if (
+        this.classList.contains(
+            "disappearing"
+        )
+    ) {
+        return;
+    }
+
+    const bonus =
+        getClickPower() * 2;
+
+    /*
+    Affichage +2 si le clic
+    normal donne 1.
+    */
+
+    showPlus(bonus);
+
+    addFruit(bonus);
+
+    /* Animation de disparition */
+    this.classList.add(
+        "disappearing"
+    );
+
+    animateAnimal();
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "🍪 +" +
+        bonus +
+        " ! Miam 😋";
+
+    save();
+    update();
+
+    /*
+    On attend la fin de l'animation
+    avant de cacher complètement
+    le cookie.
+    */
+
+    setTimeout(() => {
+
+        this.classList.add("hidden");
+        this.classList.remove("disappearing");
+
+    }, 450);
+
+    /*
+    Nouveau cookie après 20 secondes.
+    */
+
+    setTimeout(
+        spawnCookie,
+        20000
+    );
+};
+
+
+/* Premier cookie après 5 secondes */
+
+setTimeout(
+    spawnCookie,
+    5000
+);
+
+
+/* =========================
+   AUTO CLICKERS
+========================= */
+
+setInterval(function() {
+
+    let amount = 0;
+
+    if (saveData.world === 1) {
+
+        if (saveData.owned.auto1) {
+
+            let multiplier = 1;
+
+            const u =
+                saveData.upgrades.auto1 || 0;
+
+            if (u === 1)
+                multiplier = 1.5;
+
+            if (u === 2)
+                multiplier = 3;
+
+            if (u === 3)
+                multiplier = 5;
+
+            amount +=
+                2 * multiplier;
         }
 
-        updateProgress();
+        if (saveData.owned.rainbow) {
+
+            amount += 5;
+
+        }
+
+    }
+
+    else {
+
+        if (saveData.owned.auto2) {
+
+            let multiplier = 1;
+
+            const u =
+                saveData.upgrades.auto2 || 0;
+
+            if (u === 1)
+                multiplier = 1.5;
+
+            if (u === 2)
+                multiplier = 3;
+
+            if (u === 3)
+                multiplier = 5;
+
+            amount +=
+                300 * multiplier;
+        }
+    }
+
+    if (amount > 0) {
+
+        addFruit(amount);
+
+        save();
+        update();
+
+    }
+
+}, 1000);
+
+
+/* =========================
+   MISE À JOUR DE L'ÉCRAN
+========================= */
+
+function update() {
+
+    document.getElementById(
+        "coins"
+    ).textContent =
+        Math.floor(saveData.coins);
+
+    document.getElementById(
+        "fruit"
+    ).textContent =
+        Math.floor(saveData.fruit);
+
+    document.getElementById(
+        "level"
+    ).textContent =
+        saveData.level;
+
+    const max =
+        saveData.world === 1
+        ? 50
+        : 100;
+
+    document.getElementById(
+        "maxLevel"
+    ).textContent =
+        max;
+
+
+    /* =====================
+       MONDE 1
+    ===================== */
+
+    if (saveData.world === 1) {
+
+        document.getElementById(
+            "worldTitle"
+        ).textContent =
+            "🌍 Monde 1 — 🐹 Capybara";
+
+        document.getElementById(
+            "animal"
+        ).src =
+            "capybara.png";
+
+        document.getElementById(
+            "fruitIcon"
+        ).textContent =
+            "🍎";
+
+        document.getElementById(
+            "needIcon"
+        ).textContent =
+            "🍎";
+
+        document.getElementById(
+            "shop1"
+        ).classList.remove(
+            "hidden"
+        );
+
+        document.getElementById(
+            "shop2"
+        ).classList.add(
+            "hidden"
+        );
+
     }
 
 
-    function updateProgress() {
+    /* =====================
+       MONDE 2
+    ===================== */
 
-        const currentLevelScore =
-            score % cookiesForNextLevel;
+    else {
 
-        const percentage =
-            (currentLevelScore / cookiesForNextLevel) * 100;
+        document.getElementById(
+            "worldTitle"
+        ).textContent =
+            "🌍 Monde 2 — 🐼 Panda";
 
-        document.getElementById("progress").style.width =
-            percentage + "%";
+        document.getElementById(
+            "animal"
+        ).src =
+            "panda.png";
+
+        document.getElementById(
+            "fruitIcon"
+        ).textContent =
+            "🎋";
+
+        document.getElementById(
+            "needIcon"
+        ).textContent =
+            "🎋";
+
+        document.getElementById(
+            "shop1"
+        ).classList.add(
+            "hidden"
+        );
+
+        document.getElementById(
+            "shop2"
+        ).classList.remove(
+            "hidden"
+        );
     }
 
 
-    updateProgress();
+    /* =====================
+       STADE DE L'ANIMAL
+    ===================== */
+
+    const animal =
+        document.getElementById(
+            "animal"
+        );
+
+    animal.className =
+        "animal";
+
+
+    if (saveData.level <= 5)
+        animal.classList.add("bebe");
+
+    else if (saveData.level <= 10)
+        animal.classList.add("enfant");
+
+    else if (saveData.level <= 25)
+        animal.classList.add("ado");
+
+    else
+        animal.classList.add("adulte");
+
+
+    /* =====================
+       PROGRESSION
+    ===================== */
+
+    if (saveData.level >= max) {
+
+        document.getElementById(
+            "need"
+        ).textContent =
+            "MAX";
+
+        document.getElementById(
+            "progressBar"
+        ).style.width =
+            "100%";
+
+    }
+
+    else {
+
+        const needed =
+            needForLevel(
+                saveData.level,
+                saveData.world
+            );
+
+        document.getElementById(
+            "need"
+        ).textContent =
+            needed;
+
+        document.getElementById(
+            "progressBar"
+        ).style.width =
+            Math.min(
+                100,
+                saveData.progress /
+                needed * 100
+            ) + "%";
+    }
+
+
+    /* =====================
+       DÉBLOCAGE MONDE 2
+    ===================== */
+
+    if (
+        saveData.world === 1 &&
+        saveData.level >= 50
+    ) {
+
+        document.getElementById(
+            "world2Button"
+        ).disabled = false;
+
+        document.getElementById(
+            "world2Button"
+        ).textContent =
+            "🌍 Entrer dans le Monde 2";
+
+        document.getElementById(
+            "world2Card"
+        ).classList.remove(
+            "locked"
+        );
+
+        document.getElementById(
+            "world2Text"
+        ).textContent =
+            "🎉 Monde 2 débloqué !";
+    }
+
+
+    /* =====================
+       BOUTONS AMÉLIORATIONS
+    ===================== */
+
+    showUpgrade(
+        "gold",
+        50,
+        "goldUpgrade"
+    );
+
+    showUpgrade(
+        "diamond",
+        100,
+        "diamondUpgrade"
+    );
+
+    showUpgrade(
+        "rainbow",
+        750,
+        "rainbowUpgrade"
+    );
+
+    showUpgrade(
+        "auto1",
+        500,
+        "auto1Upgrade",
+        true
+    );
+
+    showUpgrade(
+        "galaxy",
+        1500,
+        "galaxyUpgrade"
+    );
+
+    showUpgrade(
+        "lightning",
+        6000,
+        "lightningUpgrade"
+    );
+
+    showUpgrade(
+        "volcano",
+        50000,
+        "volcanoUpgrade"
+    );
+
+    showUpgrade(
+        "auto2",
+        100000,
+        "auto2Upgrade",
+        true
+    );
+}
+
+
+/* =========================
+   DÉMARRAGE
+========================= */
+
+update();
 
 </script>
 
 </body>
 </html>
+```
