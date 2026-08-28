@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coin Rush</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #17172b, #34205a);
+    color: white;
+    text-align: center;
+}
+
+.game {
+    max-width: 520px;
+    margin: auto;
+    padding: 15px;
+}
+
+.card {
+    background: #25253d;
+    border-radius: 20px;
+    padding: 15px;
+    margin: 12px 0;
+}
+
+.stats {
+    display: flex;
+    gap: 10px;
+}
+
+.stat {
+    flex: 1;
+    background: #151525;
+    padding: 12px;
+    border-radius: 15px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.animalArea {
+    height: 280px;
+    background: linear-gradient(#8bdcff, #e7fbff);
+    border-radius: 18px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.animal {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+}
+
+.bebe {
+    transform: scale(0.75);
+}
+
+.enfant {
+    transform: scale(0.85);
+}
+
+.ado {
+    transform: scale(0.95);
+}
+
+.adulte {
+    transform: scale(1.05);
+}
+
+.animal.eating {
+    animation: eating 0.55s ease;
+}
+
+@keyframes eating {
+    0% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1.12) rotate(-4deg);
+    }
+
+    50% {
+        transform: scale(0.92) rotate(4deg);
+    }
+
+    75% {
+        transform: scale(1.08) rotate(-2deg);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animal.happy {
+    animation: happy 0.8s ease;
+}
+
+@keyframes happy {
+    0% {
+        transform: scale(1);
+    }
+
+    30% {
+        transform: scale(1.15) translateY(-8px);
+    }
+
+    60% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.heart {
+    position: absolute;
+    font-size: 35px;
+    pointer-events: none;
+    animation: heart 1s forwards;
+}
+
+@keyframes heart {
+    0% {
+        opacity: 1;
+        transform: translateY(10px) scale(0.6);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(-40px) scale(1.2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-90px) scale(1);
+    }
+}
+
+.cookie {
+    position: absolute;
+    font-size: 45px;
+    cursor: pointer;
+    z-index: 5;
+    opacity: 1;
+    transform: scale(1);
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease;
+}
+
+.cookie.disappearing {
+    opacity: 0;
+    transform: scale(0.2) rotate(35deg);
+    pointer-events: none;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.plusOne {
+    position: absolute;
+    font-size: 32px;
+    font-weight: bold;
+    color: #20c95c;
+    text-shadow: 0 2px 4px #0005;
+    pointer-events: none;
+    z-index: 20;
+    animation: plusAnimation 0.85s ease-out forwards;
+}
+
+@keyframes plusAnimation {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, 20px) scale(0.6);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1.2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -75px) scale(1);
+    }
+}
+
+.progress {
+    height: 15px;
+    background: #111;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progressBar {
+    height: 100%;
+    width: 0%;
+    background: #ffd43b;
+    transition: width 0.3s;
+}
+
+button {
+    width: 100%;
+    border: none;
+    border-radius: 14px;
+    padding: 14px;
+    margin: 5px 0;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    background: #454563;
+    color: white;
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.mainButton {
+    background: #ffd43b;
+    color: #171717;
+    font-size: 20px;
+}
+
+.item {
+    background: #191929;
+    padding: 12px;
+    border-radius: 15px;
+    margin: 8px 0;
+}
+
+.status {
+    min-height: 25px;
+    font-weight: bold;
+}
+
+.small {
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.locked {
+    opacity: 0.55;
+}
+
+.gold {
+    animation: gold 0.45s;
+}
+
+@keyframes gold {
+    50% {
+        box-shadow: 0 0 30px gold, 0 0 60px gold;
+    }
+}
+
+.diamond {
+    animation: diamond 0.5s;
+}
+
+@keyframes diamond {
+    50% {
+        box-shadow: 0 0 30px cyan, 0 0 60px white;
+    }
+}
+
+.rainbow {
+    animation: rainbow 0.6s;
+}
+
+@keyframes rainbow {
+    0% {
+        box-shadow: 0 0 20px red;
+    }
+
+    25% {
+        box-shadow: 0 0 30px orange;
+    }
+
+    50% {
+        box-shadow: 0 0 35px lime;
+    }
+
+    75% {
+        box-shadow: 0 0 35px cyan;
+    }
+
+    100% {
+        box-shadow: 0 0 20px violet;
+    }
+}
+
+.galaxy {
+    animation: galaxy 0.6s;
+}
+
+@keyframes galaxy {
+    50% {
+        box-shadow: 0 0 35px violet, 0 0 70px purple;
+    }
+}
+
+.lightning {
+    animation: lightning 0.5s;
+}
+
+@keyframes lightning {
+    25% {
+        box-shadow: 0 0 35px white;
+    }
+
+    50% {
+        box-shadow: 0 0 60px cyan;
+    }
+
+    75% {
+        box-shadow: 0 0 35px white;
+    }
+}
+
+.lava {
+    animation: lava 0.5s;
+}
+
+@keyframes lava {
+    50% {
+        box-shadow: 0 0 35px orange, 0 0 70px red;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="game">
+
+<h1>🪙 Coin Rush</h1>
+
+<div class="card stats">
+
+```
+<div class="stat">
+    🍎 <span id="food">0</span>
+</div>
+
+<div class="stat">
+    ❤️ <span id="hearts">0</span>
+</div>
+```
+
+</div>
+
+<div class="card">
+
+<h2 id="worldTitle">🌍 Monde 1 — 🐹 Capybara</h2>
+
+<div class="animalArea" id="animalArea">
+
+<img
+id="animal"
+class="animal bebe"
+src="IMG_1419.jpeg"
+alt="Capybara"
+
+>
+
+<div id="cookie" class="cookie hidden">🍪</div>
+
+</div>
+
+<p>
+Niveau <b><span id="level">1</span></b>/<span id="maxLevel">50</span>
+</p>
+
+<div class="progress">
+    <div id="progressBar" class="progressBar"></div>
+</div>
+
+<p class="small">
+    <span id="need">40</span>
+    <span id="foodIcon">🍎</span>
+    pour le prochain niveau
+</p>
+
+</div>
+
+<div class="card">
+
+<button id="clickButton" class="mainButton">
+    👆 DONNER À MANGER
+</button>
+
+<div id="status" class="status"></div>
+
+</div>
+
+<div id="shop1" class="card">
+
+<h2>🛒 Objets — Monde 1</h2>
+
+<div class="item">
+
+<b>🟡 Clic Gold</b>
+
+<p>50 🍎 → 2 🍎 par clic</p>
+
+<p>Effet doré ✨</p>
+
+<button onclick="buyClick('gold')">
+Acheter / utiliser
+</button>
+
+<div id="goldUpgrade"></div>
+
+</div>
+
+<div class="item">
+
+<b>💎 Clic Diamond</b>
+
+<p>100 🍎 → 3 🍎 par clic</p>
+
+<p>Effet diamant 💎</p>
+
+<button onclick="buyClick('diamond')">
+Acheter / utiliser
+</button>
+
+<div id="diamondUpgrade"></div>
+
+</div>
+
+<div class="item">
+
+<b>🤖 Auto Clicker</b>
+
+<p>500 🍎 → 2 🍎 par seconde</p>
+
+<button onclick="buyAuto('auto1',500)">
+Acheter / utiliser
+</button>
+
+<div id="auto1Upgrade"></div>
+
+</div>
+
+<div class="item">
+
+<b>🌈 Clic Rainbow</b>
+
+<p>750 🍎 → 10 🍎 par clic</p>
+
+<p>+5 🍎 par seconde</p>
+
+<p>Effet rainbow 🌈</p>
+
+<button onclick="buyClick('rainbow')">
+Acheter / utiliser
+</button>
+
+<div id="rainbowUpgrade"></div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>🌍 Mondes</h2>
+
+<div class="item">
+
+<h3>🌍 Monde 1 — 🐹</h3>
+
+<p>Capybara — 50 niveaux</p>
+
+</div>
+
+<div id="world2Card" class="item locked">
+
+<h3>🔒 Monde 2 — 🐼</h3>
+
+<p id="world2Text">
+Atteins le niveau 50 du Capybara.
+</p>
+
+<button id="world2Button" disabled onclick="goWorld2()">
+🔒 Niveau 50 requis
+</button>
+
+</div>
+
+<div class="item locked">
+
+<h3>🔒 Monde 3 — 🦎</h3>
+
+<p>Axolote</p>
+
+<b>Bientôt disponible</b>
+
+</div>
+
+</div>
+
+<div id="shop2" class="card hidden">
+
+<h2>🌍 Monde 2 — 🐼 Panda</h2>
+
+<div class="item">
+
+<b>🌌 Clic Galaxie</b>
+
+<p>1 500 🎋 → 50 🎋 par clic</p>
+
+<p>Effet galaxie violet 🟣</p>
+
+<button onclick="buyClick('galaxy')">
+Acheter / utiliser
+</button>
+
+<div id="galaxyUpgrade"></div>
+
+</div>
+
+<div class="item">
+
+<b>⚡ Clic Foudre</b>
+
+<p>6 000 🎋 → 100 🎋 par clic</p>
+
+<p>Effet éclair ⚡</p>
+
+<button onclick="buyClick('lightning')">
+Acheter / utiliser
+</button>
+
+<div id="lightningUpgrade"></div>
+
+</div>
+
+<div class="item">
+
+<b>🌋 Clic Volcan</b>
+
+<p>50 000 🎋 → 180 🎋 par clic</p>
+
+<p>Effet lave 🔥</p>
+
+<button onclick="buyClick('volcano')">
+Acheter / utiliser
+</button>
+
+<div id="volcanoUpgrade"></div>
+
+</div>
+
+<div class="item">
+
+<b>🤖 Auto Clicker</b>
+
+<p>100 000 🎋 → 300 🎋 par seconde</p>
+
+<button onclick="buyAuto('auto2',100000)">
+Acheter / utiliser
+</button>
+
+<div id="auto2Upgrade"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+let saveData = JSON.parse(
+    localStorage.getItem("coinRush")
+);
+
+if (!saveData) {
+
+    saveData = {
+        food: 0,
+        hearts: 0,
+        world: 1,
+        level: 1,
+        progress: 0,
+        clickType: "normal",
+        owned: {},
+        upgrades: {}
+    };
+
+}
+
+/* Compatibilité avec une ancienne sauvegarde */
+
+if (saveData.food === undefined) {
+    saveData.food = 0;
+}
+
+if (saveData.hearts === undefined) {
+    saveData.hearts = 0;
+}
+
+if (!saveData.owned) {
+    saveData.owned = {};
+}
+
+if (!saveData.upgrades) {
+    saveData.upgrades = {};
+}
+
+function save() {
+
+    localStorage.setItem(
+        "coinRush",
+        JSON.stringify(saveData)
+    );
+
+}
+
+const items = {
+
+    gold: {
+        price: 50,
+        power: 2
+    },
+
+    diamond: {
+        price: 100,
+        power: 3
+    },
+
+    rainbow: {
+        price: 750,
+        power: 10
+    },
+
+    galaxy: {
+        price: 1500,
+        power: 50
+    },
+
+    lightning: {
+        price: 6000,
+        power: 100
+    },
+
+    volcano: {
+        price: 50000,
+        power: 180
+    }
+
+};
+
+function needForLevel(level, world) {
+
+    if (world === 1) {
+
+        const values = {
+            1: 40,
+            2: 60,
+            3: 80,
+            4: 110,
+            5: 150,
+            6: 200,
+            7: 250,
+            8: 300,
+            9: 360,
+            10: 440,
+            11: 560,
+            12: 700,
+            13: 850,
+            14: 1000
+        };
+
+        if (values[level]) {
+            return values[level];
+        }
+
+        return Math.floor(
+            1000 * Math.pow(1.18, level - 15)
+        );
+
+    }
+
+    return Math.floor(
+        200 * Math.pow(1.075, level - 1)
+    );
+
+}
+
+function upgradedPower(name) {
+
+    const base = items[name].power;
+
+    const upgrade =
+        saveData.upgrades[name] || 0;
+
+    if (upgrade === 1)
+        return Math.floor(base * 1.5);
+
+    if (upgrade === 2)
+        return base * 3;
+
+    if (upgrade === 3)
+        return base * 5;
+
+    return base;
+
+}
+
+function getClickPower() {
+
+    if (saveData.clickType === "gold")
+        return upgradedPower("gold");
+
+    if (saveData.clickType === "diamond")
+        return upgradedPower("diamond");
+
+    if (saveData.clickType === "rainbow")
+        return upgradedPower("rainbow");
+
+    if (saveData.clickType === "galaxy")
+        return upgradedPower("galaxy");
+
+    if (saveData.clickType === "lightning")
+        return upgradedPower("lightning");
+
+    if (saveData.clickType === "volcano")
+        return upgradedPower("volcano");
+
+    return saveData.world === 1 ? 1 : 5;
+
+}
+
+function showPlus(amount) {
+
+    const plus =
+        document.createElement("div");
+
+    plus.className = "plusOne";
+
+    plus.textContent = "+" + amount;
+
+    const area =
+        document.getElementById("animalArea");
+
+    plus.style.left =
+        (area.clientWidth / 2) + "px";
+
+    plus.style.top =
+        (area.clientHeight / 2) + "px";
+
+    area.appendChild(plus);
+
+    setTimeout(function() {
+        plus.remove();
+    }, 850);
+
+}
+
+function animateAnimal() {
+
+    const animal =
+        document.getElementById("animal");
+
+    animal.classList.remove("eating");
+    animal.classList.remove("happy");
+
+    void animal.offsetWidth;
+
+    animal.classList.add("eating");
+
+    setTimeout(function() {
+
+        animal.classList.remove("eating");
+        animal.classList.add("happy");
+
+    }, 500);
+
+}
+
+function addFood(amount) {
+
+    saveData.food += amount;
+
+    update();
+
+}
+
+function addProgress(amount) {
+
+    saveData.progress += amount;
+
+    while (true) {
+
+        const max =
+            saveData.world === 1 ? 50 : 100;
+
+        if (saveData.level >= max)
+            break;
+
+        const needed =
+            needForLevel(
+                saveData.level,
+                saveData.world
+            );
+
+        if (saveData.progress < needed)
+            break;
+
+        saveData.progress -= needed;
+
+        saveData.level++;
+
+        /* Un seul cœur par niveau */
+
+        saveData.hearts++;
+
+        createHeart();
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "🎉 Niveau " +
+            saveData.level +
+            " ! ❤️";
+
+    }
+
+}
+
+function createHeart() {
+
+    const heart =
+        document.createElement("div");
+
+    heart.className = "heart";
+
+    heart.textContent = "❤️";
+
+    const area =
+        document.getElementById("animalArea");
+
+    heart.style.left =
+        (30 + Math.random() * 40) + "%";
+
+    heart.style.top =
+        (45 + Math.random() * 20) + "%";
+
+    area.appendChild(heart);
+
+    setTimeout(function() {
+        heart.remove();
+    }, 1000);
+
+}
+
+document.getElementById(
+    "clickButton"
+).onclick = function() {
+
+    const amount =
+        getClickPower();
+
+    addFood(amount);
+    addProgress(amount);
+
+    showPlus(amount);
+
+    animateAnimal();
+
+    playEffect();
+
+    if (saveData.level < 50 || saveData.world !== 1) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "😋 Miam ! +" + amount;
+
+    }
+
+    save();
+    update();
+
+};
+
+function playEffect() {
+
+    const button =
+        document.getElementById(
+            "clickButton"
+        );
+
+    button.className =
+        "mainButton";
+
+    void button.offsetWidth;
+
+    if (saveData.clickType === "gold")
+        button.classList.add("gold");
+
+    if (saveData.clickType === "diamond")
+        button.classList.add("diamond");
+
+    if (saveData.clickType === "rainbow")
+        button.classList.add("rainbow");
+
+    if (saveData.clickType === "galaxy")
+        button.classList.add("galaxy");
+
+    if (saveData.clickType === "lightning")
+        button.classList.add("lightning");
+
+    if (saveData.clickType === "volcano")
+        button.classList.add("lava");
+
+}
+
+function buyClick(name) {
+
+    if (saveData.owned[name]) {
+
+        saveData.clickType = name;
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "✅ " + name + " sélectionné";
+
+        save();
+        update();
+
+        return;
+    }
+
+    const price =
+        items[name].price;
+
+    if (saveData.food < price) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "❌ Pas assez de nourriture";
+
+        return;
+    }
+
+    saveData.food -= price;
+
+    saveData.owned[name] = true;
+
+    saveData.clickType = name;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "🎉 Objet acheté !";
+
+    save();
+    update();
+
+}
+
+function buyAuto(name, price) {
+
+    if (saveData.owned[name]) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "🤖 Auto Clicker déjà acheté";
+
+        return;
+    }
+
+    if (saveData.food < price) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "❌ Pas assez de nourriture";
+
+        return;
+    }
+
+    saveData.food -= price;
+
+    saveData.owned[name] = true;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "🤖 Auto Clicker acheté !";
+
+    save();
+    update();
+
+}
+
+function upgradeClick(name) {
+
+    if (!saveData.owned[name])
+        return;
+
+    const current =
+        saveData.upgrades[name] || 0;
+
+    if (current >= 3)
+        return;
+
+    let multiplier;
+
+    if (current === 0)
+        multiplier = 0.95;
+
+    else if (current === 1)
+        multiplier = 2;
+
+    else
+        multiplier = 5;
+
+    const price =
+        Math.floor(
+            items[name].price * multiplier
+        );
+
+    if (saveData.food < price) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "❌ Pas assez de nourriture";
+
+        return;
+    }
+
+    saveData.food -= price;
+
+    saveData.upgrades[name] =
+        current + 1;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "⬆️ Amélioration achetée !";
+
+    save();
+    update();
+
+}
+
+function upgradeAuto(name, price) {
+
+    if (!saveData.owned[name])
+        return;
+
+    const current =
+        saveData.upgrades[name] || 0;
+
+    if (current >= 3)
+        return;
+
+    let multiplier;
+
+    if (current === 0)
+        multiplier = 0.95;
+
+    else if (current === 1)
+        multiplier = 2;
+
+    else
+        multiplier = 5;
+
+    const upgradePrice =
+        Math.floor(price * multiplier);
+
+    if (saveData.food < upgradePrice) {
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "❌ Pas assez de nourriture";
+
+        return;
+    }
+
+    saveData.food -= upgradePrice;
+
+    saveData.upgrades[name] =
+        current + 1;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "⬆️ Amélioration achetée !";
+
+    save();
+    update();
+
+}
+
+function showUpgrade(
+    name,
+    price,
+    elementId,
+    auto = false
+) {
+
+    const element =
+        document.getElementById(elementId);
+
+    if (!saveData.owned[name]) {
+
+        element.innerHTML = "";
+
+        return;
+    }
+
+    const level =
+        saveData.upgrades[name] || 0;
+
+    if (level >= 3) {
+
+        element.innerHTML =
+            "<p>✅ Niveau maximum</p>";
+
+        return;
+    }
+
+    let multiplier;
+
+    if (level === 0)
+        multiplier = 0.95;
+
+    else if (level === 1)
+        multiplier = 2;
+
+    else
+        multiplier = 5;
+
+    const upgradePrice =
+        Math.floor(price * multiplier);
+
+    const nextPower =
+        level === 0
+        ? "×1,5"
+        : level === 1
+        ? "×3"
+        : "×5";
+
+    element.innerHTML =
+        "<button onclick=\"" +
+        (
+            auto
+            ? "upgradeAuto('" +
+              name +
+              "'," +
+              price +
+              ")"
+            : "upgradeClick('" +
+              name +
+              "')"
+        ) +
+        "\">" +
+        "⬆️ Amélioration " +
+        (level + 1) +
+        " — " +
+        upgradePrice +
+        " 🍎 — " +
+        nextPower +
+        "</button>";
+
+}
+
+function goWorld2() {
+
+    if (
+        saveData.world === 1 &&
+        saveData.level >= 50
+    ) {
+
+        saveData.world = 2;
+
+        saveData.food = 0;
+        saveData.progress = 0;
+        saveData.level = 1;
+        saveData.clickType = "normal";
+        saveData.owned = {};
+        saveData.upgrades = {};
+
+        document.getElementById(
+            "status"
+        ).textContent =
+            "🐼 Bienvenue dans le Monde 2 !";
+
+        save();
+        update();
+
+    }
+
+}
+
+function spawnCookie() {
+
+    const cookie =
+        document.getElementById("cookie");
+
+    cookie.classList.remove("hidden");
+    cookie.classList.remove("disappearing");
+
+    const area =
+        document.getElementById("animalArea");
+
+    const maxX =
+        area.clientWidth - 55;
+
+    const maxY =
+        area.clientHeight - 65;
+
+    cookie.style.left =
+        Math.max(
+            5,
+            Math.random() * maxX
+        ) + "px";
+
+    cookie.style.top =
+        Math.max(
+            5,
+            Math.random() * maxY
+        ) + "px";
+
+}
+
+document.getElementById(
+    "cookie"
+).onclick = function(event) {
+
+    event.stopPropagation();
+
+    if (
+        this.classList.contains(
+            "disappearing"
+        )
+    ) {
+        return;
+    }
+
+    const bonus =
+        getClickPower() * 2;
+
+    showPlus(bonus);
+
+    addFood(bonus);
+    addProgress(bonus);
+
+    this.classList.add(
+        "disappearing"
+    );
+
+    animateAnimal();
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "🍪 +" +
+        bonus +
+        " ! Miam 😋";
+
+    save();
+    update();
+
+    setTimeout(() => {
+
+        this.classList.add("hidden");
+        this.classList.remove("disappearing");
+
+    }, 450);
+
+    setTimeout(
+        spawnCookie,
+        20000
+    );
+
+};
+
+setTimeout(
+    spawnCookie,
+    5000
+);
+
+setInterval(function() {
+
+    let amount = 0;
+
+    if (saveData.world === 1) {
+
+        if (saveData.owned.auto1) {
+
+            let multiplier = 1;
+
+            const u =
+                saveData.upgrades.auto1 || 0;
+
+            if (u === 1)
+                multiplier = 1.5;
+
+            if (u === 2)
+                multiplier = 3;
+
+            if (u === 3)
+                multiplier = 5;
+
+            amount +=
+                2 * multiplier;
+
+        }
+
+        if (saveData.owned.rainbow) {
+
+            amount += 5;
+
+        }
+
+    } else {
+
+        if (saveData.owned.auto2) {
+
+            let multiplier = 1;
+
+            const u =
+                saveData.upgrades.auto2 || 0;
+
+            if (u === 1)
+                multiplier = 1.5;
+
+            if (u === 2)
+                multiplier = 3;
+
+            if (u === 3)
+                multiplier = 5;
+
+            amount +=
+                300 * multiplier;
+
+        }
+
+    }
+
+    if (amount > 0) {
+
+        addFood(amount);
+        addProgress(amount);
+
+        save();
+        update();
+
+    }
+
+}, 1000);
+
+function update() {
+
+    document.getElementById(
+        "food"
+    ).textContent =
+        Math.floor(saveData.food);
+
+    document.getElementById(
+        "hearts"
+    ).textContent =
+        saveData.hearts;
+
+    document.getElementById(
+        "level"
+    ).textContent =
+        saveData.level;
+
+    const max =
+        saveData.world === 1
+        ? 50
+        : 100;
+
+    document.getElementById(
+        "maxLevel"
+    ).textContent =
+        max;
+
+    const animal =
+        document.getElementById(
+            "animal"
+        );
+
+    if (saveData.world === 1) {
+
+        document.getElementById(
+            "worldTitle"
+        ).textContent =
+            "🌍 Monde 1 — 🐹 Capybara";
+
+        animal.src =
+            "IMG_1419.jpeg";
+
+        animal.alt =
+            "Capybara";
+
+        document.getElementById(
+            "foodIcon"
+        ).textContent =
+            "🍎";
+
+        document.getElementById(
+            "shop1"
+        ).classList.remove(
+            "hidden"
+        );
+
+        document.getElementById(
+            "shop2"
+        ).classList.add(
+            "hidden"
+        );
+
+    } else {
+
+        document.getElementById(
+            "worldTitle"
+        ).textContent =
+            "🌍 Monde 2 — 🐼 Panda";
+
+        animal.src =
+            "IMG_1420.jpeg";
+
+        animal.alt =
+            "Panda";
+
+        document.getElementById(
+            "foodIcon"
+        ).textContent =
+            "🎋";
+
+        document.getElementById(
+            "shop1"
+        ).classList.add(
+            "hidden"
+        );
+
+        document.getElementById(
+            "shop2"
+        ).classList.remove(
+            "hidden"
+        );
+
+    }
+
+    animal.className =
+        "animal";
+
+    if (saveData.level <= 5)
+        animal.classList.add("bebe");
+
+    else if (saveData.level <= 10)
+        animal.classList.add("enfant");
+
+    else if (saveData.level <= 25)
+        animal.classList.add("ado");
+
+    else
+        animal.classList.add("adulte");
+
+    if (saveData.level >= max) {
+
+        document.getElementById(
+            "need"
+        ).textContent =
+            "MAX";
+
+        document.getElementById(
+            "progressBar"
+        ).style.width =
+            "100%";
+
+    } else {
+
+        const needed =
+            needForLevel(
+                saveData.level,
+                saveData.world
+            );
+
+        document.getElementById(
+            "need"
+        ).textContent =
+            needed;
+
+        document.getElementById(
+            "progressBar"
+        ).style.width =
+            Math.min(
+                100,
+                saveData.progress /
+                needed * 100
+            ) + "%";
+
+    }
+
+    if (
+        saveData.world === 1 &&
+        saveData.level >= 50
+    ) {
+
+        document.getElementById(
+            "world2Button"
+        ).disabled = false;
+
+        document.getElementById(
+            "world2Button"
+        ).textContent =
+            "🌍 Entrer dans le Monde 2";
+
+        document.getElementById(
+            "world2Card"
+        ).classList.remove(
+            "locked"
+        );
+
+        document.getElementById(
+            "world2Text"
+        ).textContent =
+            "🎉 Monde 2 débloqué !";
+
+    }
+
+    showUpgrade(
+        "gold",
+        50,
+        "goldUpgrade"
+    );
+
+    showUpgrade(
+        "diamond",
+        100,
+        "diamondUpgrade"
+    );
+
+    showUpgrade(
+        "rainbow",
+        750,
+        "rainbowUpgrade"
+    );
+
+    showUpgrade(
+        "auto1",
+        500,
+        "auto1Upgrade",
+        true
+    );
+
+    showUpgrade(
+        "galaxy",
+        1500,
+        "galaxyUpgrade"
+    );
+
+    showUpgrade(
+        "lightning",
+        6000,
+        "lightningUpgrade"
+    );
+
+    showUpgrade(
+        "volcano",
+        50000,
+        "volcanoUpgrade"
+    );
+
+    showUpgrade(
+        "auto2",
+        100000,
+        "auto2Upgrade",
+        true
+    );
+
+}
+
+update();
+
+</script>
+
+</body>
+</html>
