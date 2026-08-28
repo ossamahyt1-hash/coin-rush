@@ -13,10 +13,6 @@ content="width=device-width, initial-scale=1.0">
 
 <style>
 
-/* =========================
-   GENERAL
-========================= */
-
 * {
     box-sizing: border-box;
 }
@@ -44,20 +40,14 @@ body {
 
 
 /* =========================
-   STATS
+   NOURRITURE
 ========================= */
 
-.stats {
-    display: flex;
-    gap: 10px;
-}
-
-.stat {
-    flex: 1;
+.foodBox {
     background: #151525;
-    padding: 12px;
+    padding: 15px;
     border-radius: 15px;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: bold;
 }
 
@@ -67,19 +57,30 @@ body {
 ========================= */
 
 .animalArea {
+
     height: 280px;
-    background: linear-gradient(#8bdcff, #e7fbff);
+
+    background:
+        linear-gradient(
+            #8bdcff,
+            #e7fbff
+        );
+
     border-radius: 18px;
+
     position: relative;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     overflow: hidden;
 }
 
 .animal {
+
     width: 180px;
     height: 180px;
 
@@ -88,11 +89,12 @@ body {
     user-select: none;
     pointer-events: none;
 
-    transition: transform 0.25s ease;
+    transition:
+        transform 0.25s ease;
 }
 
 
-/* Taille selon l'âge */
+/* Taille de l'animal */
 
 .bebe {
     transform: scale(0.75);
@@ -116,33 +118,49 @@ body {
 ========================= */
 
 .animal.eating {
-    animation: eating 0.55s ease;
+
+    animation:
+        eating
+        0.55s
+        ease;
 }
 
 @keyframes eating {
 
     0% {
-        transform: scale(1);
+        transform:
+            scale(1)
+            rotate(0deg);
     }
 
     20% {
-        transform: scale(1.12) rotate(-5deg);
+        transform:
+            scale(1.12)
+            rotate(-5deg);
     }
 
     40% {
-        transform: scale(0.92) rotate(5deg);
+        transform:
+            scale(0.92)
+            rotate(5deg);
     }
 
     60% {
-        transform: scale(1.10) rotate(-3deg);
+        transform:
+            scale(1.10)
+            rotate(-3deg);
     }
 
     80% {
-        transform: scale(1.04) rotate(2deg);
+        transform:
+            scale(1.04)
+            rotate(2deg);
     }
 
     100% {
-        transform: scale(1);
+        transform:
+            scale(1)
+            rotate(0deg);
     }
 }
 
@@ -152,25 +170,83 @@ body {
 ========================= */
 
 .animal.happy {
-    animation: happy 0.8s ease;
+
+    animation:
+        happy
+        0.8s
+        ease;
 }
 
 @keyframes happy {
 
     0% {
-        transform: scale(1);
+        transform:
+            scale(1);
     }
 
     30% {
-        transform: scale(1.15) translateY(-10px);
+        transform:
+            scale(1.15)
+            translateY(-10px);
     }
 
     60% {
-        transform: scale(1.08);
+        transform:
+            scale(1.08);
     }
 
     100% {
-        transform: scale(1);
+        transform:
+            scale(1);
+    }
+}
+
+
+/* =========================
+   COEUR
+========================= */
+
+.heart {
+
+    position: absolute;
+
+    font-size: 35px;
+
+    pointer-events: none;
+
+    animation:
+        heartAnimation
+        1s
+        forwards;
+}
+
+@keyframes heartAnimation {
+
+    0% {
+
+        opacity: 1;
+
+        transform:
+            translateY(10px)
+            scale(0.6);
+    }
+
+    50% {
+
+        opacity: 1;
+
+        transform:
+            translateY(-40px)
+            scale(1.2);
+    }
+
+    100% {
+
+        opacity: 0;
+
+        transform:
+            translateY(-90px)
+            scale(1);
     }
 }
 
@@ -180,6 +256,7 @@ body {
 ========================= */
 
 .cookie {
+
     position: absolute;
 
     font-size: 45px;
@@ -190,11 +267,14 @@ body {
 
     opacity: 1;
 
-    transform: scale(1) rotate(0deg);
+    transform:
+        scale(1)
+        rotate(0deg);
 
     transition:
         opacity 0.4s ease,
-        transform 0.45s cubic-bezier(.2,.8,.2,1);
+        transform 0.45s
+        cubic-bezier(.2,.8,.2,1);
 }
 
 .cookie.disappearing {
@@ -206,10 +286,6 @@ body {
         rotate(50deg);
 
     pointer-events: none;
-}
-
-.cookie.hidden {
-    display: none;
 }
 
 
@@ -244,6 +320,7 @@ body {
 @keyframes plusAnimation {
 
     0% {
+
         opacity: 0;
 
         transform:
@@ -252,6 +329,7 @@ body {
     }
 
     20% {
+
         opacity: 1;
 
         transform:
@@ -260,56 +338,11 @@ body {
     }
 
     100% {
+
         opacity: 0;
 
         transform:
             translate(-50%,-75px)
-            scale(1);
-    }
-}
-
-
-/* =========================
-   COEUR
-========================= */
-
-.heart {
-
-    position: absolute;
-
-    font-size: 35px;
-
-    pointer-events: none;
-
-    animation:
-        heartAnimation
-        1s
-        forwards;
-}
-
-@keyframes heartAnimation {
-
-    0% {
-        opacity: 1;
-
-        transform:
-            translateY(10px)
-            scale(0.6);
-    }
-
-    50% {
-        opacity: 1;
-
-        transform:
-            translateY(-40px)
-            scale(1.2);
-    }
-
-    100% {
-        opacity: 0;
-
-        transform:
-            translateY(-90px)
             scale(1);
     }
 }
@@ -390,7 +423,7 @@ button:disabled {
 
 
 /* =========================
-   AUTRES
+   OBJETS
 ========================= */
 
 .item {
@@ -447,6 +480,7 @@ button:disabled {
     }
 }
 
+
 .diamond {
     animation: diamond 0.5s;
 }
@@ -461,6 +495,7 @@ button:disabled {
     }
 }
 
+
 .rainbow {
     animation: rainbow 0.6s;
 }
@@ -468,25 +503,31 @@ button:disabled {
 @keyframes rainbow {
 
     0% {
-        box-shadow: 0 0 20px red;
+        box-shadow:
+            0 0 20px red;
     }
 
     25% {
-        box-shadow: 0 0 30px orange;
+        box-shadow:
+            0 0 30px orange;
     }
 
     50% {
-        box-shadow: 0 0 35px lime;
+        box-shadow:
+            0 0 35px lime;
     }
 
     75% {
-        box-shadow: 0 0 35px cyan;
+        box-shadow:
+            0 0 35px cyan;
     }
 
     100% {
-        box-shadow: 0 0 20px violet;
+        box-shadow:
+            0 0 20px violet;
     }
 }
+
 
 .galaxy {
     animation: galaxy 0.6s;
@@ -502,6 +543,7 @@ button:disabled {
     }
 }
 
+
 .lightning {
     animation: lightning 0.5s;
 }
@@ -509,17 +551,21 @@ button:disabled {
 @keyframes lightning {
 
     25% {
-        box-shadow: 0 0 35px white;
+        box-shadow:
+            0 0 35px white;
     }
 
     50% {
-        box-shadow: 0 0 60px cyan;
+        box-shadow:
+            0 0 60px cyan;
     }
 
     75% {
-        box-shadow: 0 0 35px white;
+        box-shadow:
+            0 0 35px white;
     }
 }
+
 
 .lava {
     animation: lava 0.5s;
@@ -546,36 +592,28 @@ button:disabled {
 <div class="game">
 
 
-<h1>🪙 Coin Rush</h1>
+<h1>
+🪙 Coin Rush
+</h1>
 
 
 <!-- =========================
-     STATS
+     NOURRITURE
 ========================= -->
 
-<div class="card stats">
+<div class="card">
 
-    <div class="stat">
+<div class="foodBox">
 
-        🪙
-        <span id="coins">
-            0
-        </span>
+<span id="fruitIcon">
+🍎
+</span>
 
-    </div>
+<span id="fruit">
+0
+</span>
 
-
-    <div class="stat">
-
-        <span id="fruitIcon">
-            🍎
-        </span>
-
-        <span id="fruit">
-            0
-        </span>
-
-    </div>
+</div>
 
 </div>
 
@@ -672,7 +710,7 @@ pour le prochain niveau
 
 
 <!-- =========================
-     BOUTON
+     CLIC
 ========================= -->
 
 <div class="card">
@@ -719,7 +757,7 @@ pour le prochain niveau
 </b>
 
 <p>
-50 🪙 → 2 🍎 par clic
+50 🍎 → 2 🍎 par clic
 </p>
 
 <p>
@@ -744,7 +782,7 @@ Acheter / utiliser
 </b>
 
 <p>
-100 🪙 → 3 🍎 par clic
+100 🍎 → 3 🍎 par clic
 </p>
 
 <p>
@@ -769,7 +807,7 @@ Acheter / utiliser
 </b>
 
 <p>
-500 🪙 → 2 🍎 par seconde
+500 🍎 → 2 🍎 par seconde
 </p>
 
 <button
@@ -790,7 +828,7 @@ Acheter / utiliser
 </b>
 
 <p>
-750 🪙 → 10 🍎 par clic
+750 🍎 → 10 🍎 par clic
 </p>
 
 <p>
@@ -914,7 +952,7 @@ Bientôt disponible
 </b>
 
 <p>
-1 500 🪙 → 50 🎋 par clic
+1 500 🎋 → 50 🎋 par clic
 </p>
 
 <p>
@@ -939,7 +977,7 @@ Acheter / utiliser
 </b>
 
 <p>
-6 000 🪙 → 100 🎋 par clic
+6 000 🎋 → 100 🎋 par clic
 </p>
 
 <p>
@@ -964,7 +1002,7 @@ Acheter / utiliser
 </b>
 
 <p>
-50 000 🪙 → 180 🎋 par clic
+50 000 🎋 → 180 🎋 par clic
 </p>
 
 <p>
@@ -989,7 +1027,7 @@ Acheter / utiliser
 </b>
 
 <p>
-100 000 🪙 → 300 🎋 par seconde
+100 000 🎋 → 300 🎋 par seconde
 </p>
 
 <button
@@ -1028,8 +1066,6 @@ if (!saveData) {
 
     saveData = {
 
-        coins: 0,
-
         world: 1,
 
         fruit: 0,
@@ -1057,9 +1093,6 @@ if (!saveData.owned)
 if (!saveData.upgrades)
     saveData.upgrades = {};
 
-if (saveData.coins === undefined)
-    saveData.coins = 0;
-
 if (saveData.fruit === undefined)
     saveData.fruit = 0;
 
@@ -1068,6 +1101,9 @@ if (saveData.progress === undefined)
 
 if (saveData.level === undefined)
     saveData.level = 1;
+
+if (saveData.world === undefined)
+    saveData.world = 1;
 
 
 /* =====================================================
@@ -1110,7 +1146,7 @@ const items = {
 
 
 /* =====================================================
-   SAUVEGARDER
+   SAUVEGARDE
 ===================================================== */
 
 function save() {
@@ -1126,7 +1162,7 @@ function save() {
 
 
 /* =====================================================
-   BESOIN POUR NIVEAU
+   BESOIN NIVEAU
 ===================================================== */
 
 function needForLevel(
@@ -1158,11 +1194,8 @@ function needForLevel(
         };
 
 
-        if (values[level]) {
-
+        if (values[level])
             return values[level];
-
-        }
 
 
         return Math.floor(
@@ -1188,7 +1221,7 @@ function needForLevel(
 
 
 /* =====================================================
-   PUISSANCE
+   PUISSANCE DU CLIC
 ===================================================== */
 
 function getClickPower() {
@@ -1264,7 +1297,7 @@ function getClickPower() {
 
 
 /* =====================================================
-   PUISSANCE AMÉLIORÉE
+   AMÉLIORATIONS
 ===================================================== */
 
 function upgradedPower(
@@ -1307,7 +1340,7 @@ function upgradedPower(
 
 
 /* =====================================================
-   AFFICHER +X
+   +X
 ===================================================== */
 
 function showPlus(
@@ -1381,7 +1414,6 @@ function animateAnimal() {
         "eating"
     );
 
-
     animal.classList.remove(
         "happy"
     );
@@ -1432,7 +1464,7 @@ document.getElementById(
         getClickPower();
 
 
-    addFruit(
+    addFood(
         amount
     );
 
@@ -1457,17 +1489,16 @@ document.getElementById(
 
     save();
 
-
     update();
 
 };
 
 
 /* =====================================================
-   AJOUTER FRUITS
+   AJOUT NOURRITURE
 ===================================================== */
 
-function addFruit(
+function addFood(
     amount
 ) {
 
@@ -1520,8 +1551,6 @@ function addFruit(
 
         saveData.level++;
 
-
-        /* UN SEUL COEUR */
 
         createHeart();
 
@@ -1695,7 +1724,7 @@ function buyClick(
 
 
     if (
-        saveData.coins <
+        saveData.fruit <
         price
     ) {
 
@@ -1703,7 +1732,7 @@ function buyClick(
         document.getElementById(
             "status"
         ).textContent =
-            "❌ Pas assez de 🪙 coins";
+            "❌ Pas assez de nourriture";
 
 
         return;
@@ -1711,7 +1740,7 @@ function buyClick(
     }
 
 
-    saveData.coins -=
+    saveData.fruit -=
         price;
 
 
@@ -1763,7 +1792,7 @@ function buyAuto(
 
 
     if (
-        saveData.coins <
+        saveData.fruit <
         price
     ) {
 
@@ -1771,7 +1800,7 @@ function buyAuto(
         document.getElementById(
             "status"
         ).textContent =
-            "❌ Pas assez de 🪙 coins";
+            "❌ Pas assez de nourriture";
 
 
         return;
@@ -1779,7 +1808,7 @@ function buyAuto(
     }
 
 
-    saveData.coins -=
+    saveData.fruit -=
         price;
 
 
@@ -1801,7 +1830,7 @@ function buyAuto(
 
 
 /* =====================================================
-   AMÉLIORER CLIC
+   AMÉLIORATION CLIC
 ===================================================== */
 
 function upgradeClick(
@@ -1851,7 +1880,7 @@ function upgradeClick(
 
 
     if (
-        saveData.coins <
+        saveData.fruit <
         price
     ) {
 
@@ -1859,7 +1888,7 @@ function upgradeClick(
         document.getElementById(
             "status"
         ).textContent =
-            "❌ Pas assez de 🪙 coins";
+            "❌ Pas assez de nourriture";
 
 
         return;
@@ -1867,7 +1896,7 @@ function upgradeClick(
     }
 
 
-    saveData.coins -=
+    saveData.fruit -=
         price;
 
 
@@ -1889,7 +1918,7 @@ function upgradeClick(
 
 
 /* =====================================================
-   AMÉLIORER AUTO
+   AMÉLIORATION AUTO
 ===================================================== */
 
 function upgradeAuto(
@@ -1940,7 +1969,7 @@ function upgradeAuto(
 
 
     if (
-        saveData.coins <
+        saveData.fruit <
         upgradePrice
     ) {
 
@@ -1948,7 +1977,7 @@ function upgradeAuto(
         document.getElementById(
             "status"
         ).textContent =
-            "❌ Pas assez de 🪙 coins";
+            "❌ Pas assez de nourriture";
 
 
         return;
@@ -1956,7 +1985,7 @@ function upgradeAuto(
     }
 
 
-    saveData.coins -=
+    saveData.fruit -=
         upgradePrice;
 
 
@@ -1978,7 +2007,7 @@ function upgradeAuto(
 
 
 /* =====================================================
-   AFFICHER AMÉLIORATIONS
+   AFFICHER AMÉLIORATION
 ===================================================== */
 
 function showUpgrade(
@@ -2070,7 +2099,7 @@ function showUpgrade(
             (level + 1) +
             " — " +
             upgradePrice +
-            " 🪙 — " +
+            " 🍎 — " +
             nextPower +
 
             "</button>";
@@ -2090,7 +2119,7 @@ function showUpgrade(
             (level + 1) +
             " — " +
             upgradePrice +
-            " 🪙 — " +
+            " 🍎 — " +
             nextPower +
 
             "</button>";
@@ -2180,31 +2209,35 @@ function spawnCookie() {
 
 
     const maxX =
-        area.clientWidth - 55;
+        Math.max(
+            10,
+            area.clientWidth - 55
+        );
 
 
     const maxY =
-        area.clientHeight - 65;
+        Math.max(
+            10,
+            area.clientHeight - 65
+        );
 
 
     cookie.style.left =
-        Math.max(
-            5,
-            Math.random() * maxX
-        ) + "px";
+        Math.random() *
+        maxX +
+        "px";
 
 
     cookie.style.top =
-        Math.max(
-            5,
-            Math.random() * maxY
-        ) + "px";
+        Math.random() *
+        maxY +
+        "px";
 
 }
 
 
 /* =====================================================
-   COOKIE CLICK
+   CLIC COOKIE
 ===================================================== */
 
 document.getElementById(
@@ -2232,7 +2265,7 @@ document.getElementById(
     );
 
 
-    addFruit(
+    addFood(
         bonus
     );
 
@@ -2279,10 +2312,10 @@ document.getElementById(
         20000
     );
 
-};
+}
 
 
-/* Premier cookie */
+/* Premier cookie après 5 secondes */
 
 setTimeout(
     spawnCookie,
@@ -2403,7 +2436,7 @@ setInterval(
         ) {
 
 
-            addFruit(
+            addFood(
                 amount
             );
 
@@ -2425,14 +2458,6 @@ setInterval(
 ===================================================== */
 
 function update() {
-
-
-    document.getElementById(
-        "coins"
-    ).textContent =
-        Math.floor(
-            saveData.coins
-        );
 
 
     document.getElementById(
@@ -2558,7 +2583,7 @@ function update() {
 
 
     /* =====================
-       STADE ANIMAL
+       TAILLE ANIMAL
     ===================== */
 
     const animal =
@@ -2566,12 +2591,6 @@ function update() {
             "animal"
         );
 
-
-    /*
-       IMPORTANT :
-       On ne touche PAS aux
-       classes eating / happy.
-    */
 
     animal.classList.remove(
         "bebe",
@@ -2583,41 +2602,29 @@ function update() {
 
     if (
         saveData.level <= 5
-    ) {
-
+    )
         animal.classList.add(
             "bebe"
         );
 
-    }
-
     else if (
         saveData.level <= 10
-    ) {
-
+    )
         animal.classList.add(
             "enfant"
         );
 
-    }
-
     else if (
         saveData.level <= 25
-    ) {
-
+    )
         animal.classList.add(
             "ado"
         );
 
-    }
-
-    else {
-
+    else
         animal.classList.add(
             "adulte"
         );
-
-    }
 
 
     /* =====================
@@ -2672,7 +2679,7 @@ function update() {
 
 
     /* =====================
-       MONDE 2
+       DÉBLOCAGE MONDE 2
     ===================== */
 
     if (
@@ -2783,5 +2790,6 @@ save();
 </script>
 
 </body>
+
 </html>
 ```
