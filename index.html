@@ -1,0 +1,1076 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>REAL RUSH</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+html,body{
+    margin:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#05070a;
+    font-family:Arial,sans-serif;
+    color:white;
+}
+
+canvas{
+    display:block;
+    width:100%;
+    height:100%;
+    touch-action:none;
+}
+
+#ui{
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+}
+
+.top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px;
+    font-weight:bold;
+    text-shadow:0 2px 8px #000;
+}
+
+.badge{
+    background:#0009;
+    border:1px solid #ffffff30;
+    border-radius:14px;
+    padding:10px 15px;
+    backdrop-filter:blur(8px);
+}
+
+.screen{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:#000b;
+    z-index:5;
+}
+
+.card{
+    width:min(92%,480px);
+    padding:30px;
+    border:1px solid #ffffff30;
+    border-radius:24px;
+    background:#10151ddd;
+    backdrop-filter:blur(18px);
+    text-align:center;
+    box-shadow:0 20px 80px #000;
+}
+
+h1{
+    font-size:46px;
+    margin:0 0 10px;
+    letter-spacing:4px;
+}
+
+p{
+    color:#b8c0ca;
+    line-height:1.5;
+}
+
+button{
+    pointer-events:auto;
+    border:0;
+    border-radius:14px;
+    padding:15px 30px;
+    font-size:18px;
+    font-weight:bold;
+    background:white;
+    color:#111;
+    cursor:pointer;
+}
+
+button:active{
+    transform:scale(.95);
+}
+
+small{
+    display:block;
+    margin-top:15px;
+    color:#8c96a3;
+}
+
+.hidden{
+    display:none!important;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="game"></canvas>
+
+<div id="ui">
+    <div class="top">
+        <div class="badge">🏁 REAL RUSH</div>
+
+        <div class="badge">
+            SCORE : <span id="score">0</span>
+        </div>
+
+        <div class="badge">
+            ❤️ <span id="lives">3</span>
+        </div>
+    </div>
+</div>
+
+<div id="start" class="screen">
+    <div class="card">
+        <h1>REAL RUSH</h1>
+
+        <p>
+            Évite les voitures, roule le plus longtemps possible
+            et bats ton meilleur score.
+        </p>
+
+        <button id="play">
+            JOUER
+        </button>
+
+        <small>
+            PC : ← → ou A/D<br>
+            Téléphone : touche la gauche ou la droite
+        </small>
+    </div>
+</div>
+
+<div id="gameover" class="screen hidden">
+    <div class="card">
+        <h1>CRASH 💥</h1>
+
+        <p>
+            Ton score :
+            <b id="final">0</b>
+        </p>
+
+        <button id="again">
+            REJOUER
+        </button>
+    </div>
+</div>
+
+<script>
+
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
+
+let W;
+let H;
+let dpr;
+
+let playing = false;
+
+let score = 0;
+let lives = 3;
+
+let speed = 7;
+let spawnTimer = 0;
+
+let cars = [];
+let particles = [];
+
+let keys = {};
+
+const player = {
+    x:0.5,
+    y:0.82,
+    w:0.09,
+    h:0.17
+};
+
+
+/* =========================
+   RESIZE
+========================= */
+
+function resize(){
+
+    dpr = window.devicePixelRatio || 1;
+
+    W = window.innerWidth;
+    H = window.innerHeight;
+
+    canvas.width = W * dpr;
+    canvas.height = H * dpr;
+
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+
+    ctx.setTransform(
+        dpr,
+        0,
+        0,
+        dpr,
+        0,
+        0
+    );
+}
+
+window.addEventListener("resize",resize);
+
+resize();
+
+
+/* =========================
+   UTILS
+========================= */
+
+function random(min,max){
+    return min + Math.random() * (max-min);
+}
+
+function roundRect(x,y,w,h,r){
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        x,
+        y,
+        w,
+        h,
+        r
+    );
+}
+
+
+/* =========================
+   ROAD
+========================= */
+
+function drawRoad(time){
+
+    const horizon = H * 0.25;
+
+    const roadLeft = W * 0.16;
+    const roadRight = W * 0.84;
+
+    /* ciel */
+
+    const sky = ctx.createLinearGradient(
+        0,
+        0,
+        0,
+        horizon
+    );
+
+    sky.addColorStop(0,"#101722");
+    sky.addColorStop(1,"#9da9b3");
+
+    ctx.fillStyle = sky;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        horizon
+    );
+
+
+    /* sol */
+
+    ctx.fillStyle = "#222a29";
+
+    ctx.fillRect(
+        0,
+        horizon,
+        W,
+        H-horizon
+    );
+
+
+    /* route */
+
+    ctx.fillStyle = "#24282d";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        W*0.39,
+        horizon
+    );
+
+    ctx.lineTo(
+        W*0.61,
+        horizon
+    );
+
+    ctx.lineTo(
+        roadRight,
+        H
+    );
+
+    ctx.lineTo(
+        roadLeft,
+        H
+    );
+
+    ctx.closePath();
+
+    ctx.fill();
+
+
+    /* bords */
+
+    ctx.strokeStyle = "#eee9dc";
+    ctx.lineWidth = 5;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        W*0.39,
+        horizon
+    );
+
+    ctx.lineTo(
+        roadLeft,
+        H
+    );
+
+    ctx.moveTo(
+        W*0.61,
+        horizon
+    );
+
+    ctx.lineTo(
+        roadRight,
+        H
+    );
+
+    ctx.stroke();
+
+
+    /* lignes centrales */
+
+    const offset =
+        (time * speed * 1.8) % 1;
+
+    for(let i=0;i<14;i++){
+
+        const z =
+            (i/14 + offset) % 1;
+
+        const y =
+            horizon +
+            (z*z) *
+            (H-horizon);
+
+        const width =
+            2 + z*10;
+
+        const length =
+            10 + z*42;
+
+        ctx.fillStyle = "#eeeeea";
+
+        ctx.fillRect(
+            W*0.5-width/2,
+            y,
+            width,
+            length
+        );
+    }
+
+
+    /* lumières au loin */
+
+    for(let i=0;i<18;i++){
+
+        const left =
+            i % 2 === 0;
+
+        const x =
+            left
+            ? random(W*.03,W*.37)
+            : random(W*.63,W*.97);
+
+        const y =
+            random(
+                horizon-10,
+                horizon+70
+            );
+
+        ctx.globalAlpha = .35;
+
+        ctx.fillStyle = "#fff1a8";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            random(1,3),
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.globalAlpha = 1;
+    }
+}
+
+
+/* =========================
+   VOITURE
+========================= */
+
+function drawCar(
+    x,
+    y,
+    w,
+    h,
+    enemy=false
+){
+
+    ctx.save();
+
+    ctx.translate(x,y);
+
+    ctx.shadowColor = "#000";
+    ctx.shadowBlur = 18;
+    ctx.shadowOffsetY = 8;
+
+
+    /* carrosserie */
+
+    const gradient =
+        ctx.createLinearGradient(
+            -w/2,
+            0,
+            w/2,
+            0
+        );
+
+    if(enemy){
+
+        gradient.addColorStop(
+            0,
+            "#16191d"
+        );
+
+        gradient.addColorStop(
+            .5,
+            "#d4d7da"
+        );
+
+        gradient.addColorStop(
+            1,
+            "#25282d"
+        );
+
+    }else{
+
+        gradient.addColorStop(
+            0,
+            "#111316"
+        );
+
+        gradient.addColorStop(
+            .45,
+            "#ffffff"
+        );
+
+        gradient.addColorStop(
+            .6,
+            "#929aa2"
+        );
+
+        gradient.addColorStop(
+            1,
+            "#101215"
+        );
+    }
+
+
+    ctx.fillStyle = gradient;
+
+    roundRect(
+        -w/2,
+        -h/2,
+        w,
+        h,
+        w*.18
+    );
+
+    ctx.fill();
+
+
+    ctx.shadowBlur = 0;
+
+
+    /* pare-brise */
+
+    ctx.fillStyle = "#070a0d";
+
+    roundRect(
+        -w*.31,
+        -h*.28,
+        w*.62,
+        h*.30,
+        w*.08
+    );
+
+    ctx.fill();
+
+
+    /* reflet */
+
+    ctx.fillStyle = "#526676";
+
+    roundRect(
+        -w*.25,
+        -h*.25,
+        w*.5,
+        h*.18,
+        w*.04
+    );
+
+    ctx.fill();
+
+
+    /* feux */
+
+    ctx.fillStyle =
+        enemy
+        ? "#d3202a"
+        : "#e7e9eb";
+
+    roundRect(
+        -w*.38,
+        h*.19,
+        w*.20,
+        h*.09,
+        w*.03
+    );
+
+    ctx.fill();
+
+    roundRect(
+        w*.18,
+        h*.19,
+        w*.20,
+        h*.09,
+        w*.03
+    );
+
+    ctx.fill();
+
+
+    /* roues */
+
+    ctx.fillStyle = "#090a0c";
+
+    roundRect(
+        -w*.48,
+        -h*.20,
+        w*.12,
+        h*.25,
+        w*.04
+    );
+
+    ctx.fill();
+
+    roundRect(
+        w*.36,
+        -h*.20,
+        w*.12,
+        h*.25,
+        w*.04
+    );
+
+    ctx.fill();
+
+
+    ctx.restore();
+}
+
+
+/* =========================
+   SPAWN
+========================= */
+
+function spawnCar(){
+
+    const lanes = [
+        .43,
+        .50,
+        .57
+    ];
+
+    const lane =
+        lanes[
+            Math.floor(
+                Math.random()*lanes.length
+            )
+        ];
+
+    cars.push({
+
+        x:lane,
+
+        y:-.15,
+
+        w:.075,
+
+        h:.14,
+
+        vy:
+            random(.45,.75)
+            +
+            speed*.025
+    });
+}
+
+
+/* =========================
+   COLLISION
+========================= */
+
+function collision(car){
+
+    const px =
+        player.x * W;
+
+    const py =
+        player.y * H;
+
+    const cx =
+        car.x * W;
+
+    const cy =
+        car.y * H;
+
+
+    return (
+
+        Math.abs(px-cx)
+        <
+        W*(player.w+car.w)*.42
+
+        &&
+
+        Math.abs(py-cy)
+        <
+        H*(player.h+car.h)*.38
+    );
+}
+
+
+/* =========================
+   EXPLOSION
+========================= */
+
+function explosion(x,y){
+
+    for(let i=0;i<35;i++){
+
+        particles.push({
+
+            x:x,
+
+            y:y,
+
+            vx:random(-5,5),
+
+            vy:random(-7,3),
+
+            life:1,
+
+            size:random(2,7)
+        });
+    }
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetGame(){
+
+    score = 0;
+
+    lives = 3;
+
+    speed = 7;
+
+    spawnTimer = 0;
+
+    cars = [];
+
+    particles = [];
+
+    player.x = .5;
+
+    playing = true;
+
+
+    document.getElementById(
+        "score"
+    ).textContent = score;
+
+    document.getElementById(
+        "lives"
+    ).textContent = lives;
+}
+
+
+/* =========================
+   UPDATE
+========================= */
+
+function update(dt){
+
+    let direction = 0;
+
+
+    if(
+        keys.ArrowRight ||
+        keys.d
+    ){
+        direction++;
+    }
+
+
+    if(
+        keys.ArrowLeft ||
+        keys.a
+    ){
+        direction--;
+    }
+
+
+    player.x +=
+        direction *
+        dt *
+        .72;
+
+
+    player.x =
+        Math.max(
+            .405,
+            Math.min(
+                .595,
+                player.x
+            )
+        );
+
+
+    speed =
+        Math.min(
+            18,
+            7 + score*.012
+        );
+
+
+    spawnTimer -= dt;
+
+
+    if(spawnTimer <= 0){
+
+        spawnTimer =
+            Math.max(
+                .42,
+                1.05-score*.0015
+            );
+
+        spawnCar();
+    }
+
+
+    cars.forEach(car=>{
+
+        car.y +=
+            car.vy * dt;
+    });
+
+
+    for(
+        let i=cars.length-1;
+        i>=0;
+        i--
+    ){
+
+        const car =
+            cars[i];
+
+
+        if(collision(car)){
+
+            explosion(
+                car.x*W,
+                car.y*H
+            );
+
+            cars.splice(i,1);
+
+            lives--;
+
+            document.getElementById(
+                "lives"
+            ).textContent =
+                lives;
+
+
+            if(lives<=0){
+
+                endGame();
+            }
+
+        }
+
+        else if(car.y > 1.2){
+
+            cars.splice(i,1);
+
+            score++;
+
+            document.getElementById(
+                "score"
+            ).textContent =
+                score;
+        }
+    }
+
+
+    particles.forEach(p=>{
+
+        p.x += p.vx;
+
+        p.y += p.vy;
+
+        p.vy += .25;
+
+        p.life -= dt;
+    });
+
+
+    particles =
+        particles.filter(
+            p=>p.life>0
+        );
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(time){
+
+    drawRoad(time);
+
+
+    cars.forEach(car=>{
+
+        drawCar(
+            car.x*W,
+            car.y*H,
+            car.w*W,
+            car.h*H,
+            true
+        );
+    });
+
+
+    drawCar(
+        player.x*W,
+        player.y*H,
+        player.w*W,
+        player.h*H,
+        false
+    );
+
+
+    particles.forEach(p=>{
+
+        ctx.globalAlpha =
+            p.life;
+
+        ctx.fillStyle =
+            "#ffb300";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+        ctx.globalAlpha = 1;
+    });
+}
+
+
+/* =========================
+   GAME LOOP
+========================= */
+
+let lastTime = 0;
+
+function loop(time){
+
+    const dt =
+        Math.min(
+            .035,
+            (time-lastTime)/1000 || 0
+        );
+
+    lastTime = time;
+
+
+    if(playing){
+
+        update(dt);
+    }
+
+
+    render(time/1000);
+
+
+    requestAnimationFrame(loop);
+}
+
+
+/* =========================
+   GAME OVER
+========================= */
+
+function endGame(){
+
+    playing = false;
+
+    document.getElementById(
+        "final"
+    ).textContent = score;
+
+    document.getElementById(
+        "gameover"
+    ).classList.remove(
+        "hidden"
+    );
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+document.getElementById(
+    "play"
+).onclick = ()=>{
+
+    document.getElementById(
+        "start"
+    ).classList.add(
+        "hidden"
+    );
+
+    resetGame();
+};
+
+
+document.getElementById(
+    "again"
+).onclick = ()=>{
+
+    document.getElementById(
+        "gameover"
+    ).classList.add(
+        "hidden"
+    );
+
+    resetGame();
+};
+
+
+/* =========================
+   KEYBOARD
+========================= */
+
+window.addEventListener(
+    "keydown",
+    e=>{
+        keys[e.key] = true;
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    e=>{
+        keys[e.key] = false;
+    }
+);
+
+
+/* =========================
+   MOBILE
+========================= */
+
+canvas.addEventListener(
+    "pointerdown",
+    e=>{
+
+        if(
+            e.clientX <
+            W/2
+        ){
+
+            keys.ArrowLeft = true;
+
+        }else{
+
+            keys.ArrowRight = true;
+        }
+    }
+);
+
+
+canvas.addEventListener(
+    "pointerup",
+    ()=>{
+        keys.ArrowLeft = false;
+        keys.ArrowRight = false;
+    }
+);
+
+
+canvas.addEventListener(
+    "pointercancel",
+    ()=>{
+        keys.ArrowLeft = false;
+        keys.ArrowRight = false;
+    }
+);
+
+
+/* START */
+
+requestAnimationFrame(loop);
+
+</script>
+
+</body>
+</html>
+```
